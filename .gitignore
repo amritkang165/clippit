@@ -1,0 +1,27 @@
+# Purpose: Exclude generated files, private clipboard data, and signing secrets.
+.DS_Store
+.build/
+.swiftpm/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+Steps/
+Design/CompleteCode.txt
+*.zip
+*.dmg
+*.pkg
+*.xcarchive/
+Distribution/Export/
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.sqlite-*
+clip-*.png
+.env
+.env.*
+*.p12
+*.p8
+*.pem
+*.key
+*.mobileprovision
+*.provisionprofile

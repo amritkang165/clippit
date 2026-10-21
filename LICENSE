@@ -1,0 +1,38 @@
+ClipVault Software License
+Purpose: Set the terms for use of ClipVault while reserving ownership of its code.
+
+Copyright (c) 2026 Amrit Kang. All rights reserved.
+
+1. Permission to use
+The copyright holder grants you a non-exclusive, non-transferable license to
+install and use authorized copies of ClipVault without charge, for personal or
+internal business purposes. You may make copies necessary for installation and
+backup.
+
+2. Restrictions
+Except with the copyright holder's prior written permission, you may not
+redistribute, sell, sublicense, publish the source code of, modify, or distribute
+derivative versions of ClipVault. These restrictions do not override rights
+that applicable law makes non-waivable. Access to the source code does not
+itself grant permission to reuse or distribute it.
+
+3. Ownership
+All rights not expressly granted are reserved. This license does not grant
+rights to the ClipVault name, logo, or other trademarks.
+
+4. Third-party components
+Third-party components remain subject to their respective licenses. Those
+licenses, including any rights they grant, take precedence for those components.
+See ClipVault/ThirdPartyNotices.txt.
+
+5. Disclaimer
+To the extent permitted by applicable law, the software is provided "AS IS",
+without warranties of any kind, express or implied, including merchantability,
+fitness for a particular purpose, and noninfringement. To the extent permitted
+by applicable law, the copyright holder shall not be liable for claims,
+damages, or other liability arising from use of the software.
+
+6. Termination
+This license terminates if you fail to comply with its terms. Upon termination,
+you must stop using the software and delete your copies. Third-party license
+rights are unaffected.

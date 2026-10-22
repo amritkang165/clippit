@@ -7,6 +7,13 @@ ClipVault lives in the menu bar and supports searchable text and image history,
 pinned clips, filters, a global Command-Shift-V shortcut, and optional launch at
 login. Clipboard history is stored locally using SQLite and image files.
 
+## Guides
+
+- [Controls and retention](Docs/Usage.md)
+- [Local storage and privacy](Docs/Privacy.md)
+- [Manual verification](Docs/ManualTesting.md)
+- [Signing and release packaging](Distribution/ReleaseGuide.md)
+
 ## Development
 
 Open `ClipVault.xcodeproj` in Xcode and run the ClipVault scheme on My Mac.
@@ -43,6 +50,7 @@ Dependencies retain their [own licenses](ClipVault/ThirdPartyNotices.txt).
 
 ## Repository history
 
-This project was imported into this repository on November 5, 2026. Its seven
-initial commits were assigned October 21, 2026 dates at the owner's request;
-those dates do not represent when the commits were actually created.
+This project was imported into this repository on November 5, 2026. At the
+owner's request, seven initial commits were assigned October 21, 2026 dates,
+and five documentation commits were assigned October 22, 2026 dates. These
+assigned dates do not represent when the commits were actually created.

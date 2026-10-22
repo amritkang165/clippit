@@ -118,3 +118,15 @@ Run the commands below from the project folder. This guide uses version `1.0`, b
 10. **Publish the download.** Upload only the final `ClipVault-1.0.dmg` and optional SHA-256 file as release assets on your chosen HTTPS host, such as a GitHub Release. For GitHub: repository → Releases → Draft a new release → create a `v1.0` tag → attach those two files → publish. Copy the DMG asset's actual download link after publishing; do not substitute a source-code ZIP. A typical asset URL is `https://github.com/OWNER/REPO/releases/download/v1.0/ClipVault-1.0.dmg`, but use the URL created for your repository. Download through that link on a clean Mac/user account and test Gatekeeper, installation, hotkey, clipboard permissions, and login behavior before announcing it. No release has been uploaded by this project.
 
 To regenerate the editable icon artwork, run `swift Tools/GenerateIcon.swift`, then `iconutil -c icns .build/ClipVault.iconset -o Artwork/ClipVault.icns` before making a new archive.
+
+## Private source and public downloads
+
+The source repository `amritkang165/ClipVault` is private. For a public launch,
+use a separate public downloads repository or an HTTPS download host while
+keeping this source repository private. Upload only the final notarized DMG
+and its checksum; do not upload the source snapshots or clipboard data.
+
+A future Homebrew cask should reference the publicly downloadable release
+asset and its final SHA-256 checksum. No cask or public download is currently
+published by this project. Keep the proprietary license and third-party
+notices available with the distributed product.

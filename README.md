@@ -13,6 +13,14 @@ login. Clipboard history is stored locally using SQLite and image files.
 - [Local storage and privacy](Docs/Privacy.md)
 - [Manual verification](Docs/ManualTesting.md)
 - [Signing and release packaging](Distribution/ReleaseGuide.md)
+- [Capture troubleshooting](Docs/Troubleshooting.md)
+- [Copy and Paste](Docs/CopyAndPaste.md)
+- [Launch at login](Docs/LoginItems.md)
+- [Image history](Docs/Images.md)
+- [Development workflow](Docs/Development.md)
+- [Source architecture](Docs/Architecture.md)
+- [Release checklist](Distribution/ReleaseChecklist.md)
+- [Release notes template](Distribution/ReleaseNotesTemplate.md)
 
 ## Development
 
@@ -52,5 +60,7 @@ Dependencies retain their [own licenses](ClipVault/ThirdPartyNotices.txt).
 
 This project was imported into this repository on November 5, 2026. At the
 owner's request, seven initial commits were assigned October 21, 2026 dates,
-and five documentation commits were assigned October 22, 2026 dates. These
-assigned dates do not represent when the commits were actually created.
+five documentation commits were assigned October 22, 2026 dates, and eleven
+documentation and release-preparation commits were assigned October 23, 2026
+dates. These assigned dates do not represent when the commits were actually
+created.

@@ -11,6 +11,9 @@ login. Clipboard history is stored locally using SQLite and image files.
 
 - [Controls and retention](Docs/Usage.md)
 - [Local storage and privacy](Docs/Privacy.md)
+- [Search and filters](Docs/Search.md)
+- [Retention and pins](Docs/Retention.md)
+- [Reporting problems](Docs/Support.md)
 - [Manual verification](Docs/ManualTesting.md)
 - [Signing and release packaging](Distribution/ReleaseGuide.md)
 - [Capture troubleshooting](Docs/Troubleshooting.md)
@@ -62,5 +65,5 @@ This project was imported into this repository on November 5, 2026. At the
 owner's request, seven initial commits were assigned October 21, 2026 dates,
 five documentation commits were assigned October 22, 2026 dates, and eleven
 documentation and release-preparation commits were assigned October 23, 2026
-dates. These assigned dates do not represent when the commits were actually
-created.
+dates. Four further documentation commits were assigned October 24, 2026 dates.
+These assigned dates do not represent when the commits were actually created.

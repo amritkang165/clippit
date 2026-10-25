@@ -42,6 +42,11 @@ struct SettingsView: View {
                             .font(.caption).foregroundStyle(.secondary)
                     }
                 }
+                Section("Capture") {
+                    Toggle("Pause clipboard capture", isOn: $settings.capturePaused)
+                    Text("Saved clips remain available. Copies made while paused are not imported when you resume.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
                 Section("History") {
                     HStack {
                         TextField("Maximum clips", text: $maxItemsInput)

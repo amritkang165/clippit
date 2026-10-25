@@ -95,7 +95,7 @@ final class ClipStore: ObservableObject {
         }
     }
 
-    func search(_ text: String, filter: ClipFilter = .all) throws -> [ClipItem] {
+    func search(_ text: String, filter: ClipFilter = .all, sort: ClipSort = .newest) throws -> [ClipItem] {
         var query = clips
         if !text.isEmpty {
             // Bind the pattern and escape LIKE metacharacters for literal substring search.
@@ -110,7 +110,11 @@ final class ClipStore: ObservableObject {
         case .images: query = query.filter(imagePath != nil)
         case .pinned: query = query.filter(pinned != 0)
         }
-        return try read(query.order(ts.desc, rowid.desc))
+        switch sort {
+        case .newest: return try read(query.order(ts.desc, rowid.desc))
+        case .oldest: return try read(query.order(ts.asc, rowid.asc))
+        case .pinnedFirst: return try read(query.order(pinned.desc, ts.desc, rowid.desc))
+        }
     }
 
     func clearAll() throws {

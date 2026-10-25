@@ -85,6 +85,8 @@ final class ClipboardMonitor {
         }
         // Unsupported or malformed content without a string is skipped.
         guard let text = pasteboard.string(forType: .string) else { return }
+        let limit = settings.maxTextCharacters
+        guard limit == 0 || text.count <= limit else { return }
         onText?(text)
     }
 

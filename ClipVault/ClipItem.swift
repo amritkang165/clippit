@@ -45,3 +45,26 @@ extension ClipItem {
                         isPinned: isPinned)
     }
 }
+
+// Export only text entries; never include image bytes or private filesystem paths.
+struct TextHistoryExport: Codable {
+    let formatVersion: Int
+    let clips: [Entry]
+
+    struct Entry: Codable {
+        let id: UUID
+        let timestamp: Date
+        let content: String
+        let isPinned: Bool
+    }
+
+    static func encode(_ items: [ClipItem]) throws -> Data {
+        let entries = items.filter { $0.imagePath == nil }.map {
+            Entry(id: $0.id, timestamp: $0.timestamp, content: $0.content, isPinned: $0.isPinned)
+        }
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        return try encoder.encode(TextHistoryExport(formatVersion: 1, clips: entries))
+    }
+}

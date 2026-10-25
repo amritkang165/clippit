@@ -117,6 +117,13 @@ final class ClipStore: ObservableObject {
         }
     }
 
+    func clearUnpinned() throws {
+        try db.transaction { try db.run(clips.filter(pinned == 0).delete()) }
+        try reload()
+        lastSavedContent = items.first?.imagePath == nil ? items.first?.content : nil
+        try removeOrphanImages()
+    }
+
     func clearAll() throws {
         try db.transaction {
             try db.run(clips.delete())

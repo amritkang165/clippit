@@ -12,7 +12,7 @@ struct ClipVaultApp: App {
     var body: some Scene {
         MenuBarExtra {
             if let store = appDelegate.store {
-                ClipVaultMenu(store: store, onOpenHistory: {
+                ClipVaultMenu(store: store, settings: appDelegate.settings, onOpenHistory: {
                     appDelegate.openHistory()
                 }, onCopy: { item in
                     appDelegate.copy(item, andPaste: false)

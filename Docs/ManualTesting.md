@@ -28,3 +28,23 @@ checklist, not a record that they have passed on every supported Mac.
 Run `python3 Checks/run.py` for automated checks using temporary stores,
 private pasteboards, and a fake login service. Those checks do not replace
 real hotkey, Accessibility, login, and downloaded-release testing.
+
+## Capture and history tools
+
+- Pause Capture from the menu, copy dummy text and an image, and confirm neither
+  appears. Resume and confirm the paused clipboard is not imported. Copy fresh
+  text and confirm capture resumes. Repeat pause after relaunch to check persistence.
+- Set Maximum text characters to 3. Copy a four-character sample and confirm it
+  stays on the system clipboard but is not recorded. Copy three characters and
+  confirm capture. Restore 0 for unlimited capture. Test invalid input as well.
+- Right-click a text clip and exercise each Copy as transformation; paste into
+  a scratch editor and verify the original stored text remains unchanged.
+- Switch each sort mode while searching and filtering. Pin an older clip and
+  confirm Pinned first brings it ahead of unpinned clips.
+- Test Clear unpinned's Cancel path, then confirm with disposable text and image
+  entries. Verify pinned text and images remain available and copy correctly.
+- Export a filtered set with text and images. Cancel once, then save to a
+  temporary local folder. Verify the JSON contains only the matching text with
+  pin metadata and no image paths. Delete the temporary export when finished.
+
+These are manual acceptance steps, not a claim they have all been executed.

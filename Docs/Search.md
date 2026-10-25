@@ -14,7 +14,8 @@ The selected filter applies together with the query:
 | Images | Entries with an image path |
 | Pinned | Pinned text or images |
 
-Results are shown newest first. Image records have the content label `Image`;
+Results default to newest first. The toolbar can instead show oldest first or
+pinned first, with newest entries first within each pin group. Image records have the content label `Image`;
 search does not recognize text inside images or search their pixels. If a clip
 seems missing, clear the query and select All before investigating capture.
 

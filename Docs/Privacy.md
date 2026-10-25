@@ -27,3 +27,14 @@ Quitting stops capture; removing the app alone does not delete its history.
 
 When reporting a problem, share dummy sample text instead of your database,
 clipboard images, or screenshots containing private history.
+
+## Pausing and explicit exports
+
+Pause Capture stops recording new clipboard changes and persists across app
+restarts. Resume does not import content copied while paused. A maximum text
+length can skip oversized copies, but does not replace password filtering.
+
+The export action writes only the visible text results to a JSON file at a
+location you choose. Exports include potentially sensitive text and are not
+encrypted. A synced destination may upload the file through other software.
+Exported files remain after clearing history and must be managed separately.

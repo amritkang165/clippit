@@ -11,6 +11,7 @@ struct HistoryView: View {
     @State private var selection: UUID?
     @State private var errorMessage: String?
     @State private var filter: ClipFilter = .all
+    @State private var sort: ClipSort = .newest
     @State private var visibleItems: [ClipItem] = []
 
     private var selectedItem: ClipItem? { visibleItems.first { $0.id == selection } }
@@ -50,6 +51,18 @@ struct HistoryView: View {
             .background(VaultStyle.canvas)
             .searchable(text: $searchText, isPresented: $isSearchPresented, placement: .toolbar, prompt: "Search your clipboard")
             .navigationTitle("ClipVault")
+            .toolbar {
+                ToolbarItem {
+                    Menu {
+                        Picker("Sort history", selection: $sort) {
+                            ForEach(ClipSort.allCases) { option in
+                                Text(option.rawValue).tag(option)
+                            }
+                        }
+                    } label: { Label("Sort history", systemImage: "arrow.up.arrow.down") }
+                    .help("Sort history")
+                }
+            }
             .background {
                 HistoryKeyboardShortcuts { action in
                     guard let item = selectedItem else { return false }
@@ -71,6 +84,7 @@ struct HistoryView: View {
             }
             .onChange(of: presentation.focusRequest) { _, _ in isSearchPresented = true }
             .onChange(of: searchText) { _, _ in refreshResults() }
+            .onChange(of: sort) { _, _ in refreshResults() }
             .onChange(of: filter) { _, _ in refreshResults() }
             .onChange(of: store.items) { _, _ in refreshResults() }
             .alert("Could not update history", isPresented: Binding(
@@ -236,7 +250,7 @@ struct HistoryView: View {
     }
 
     private func refreshResults() {
-        do { visibleItems = try store.search(searchText, filter: filter) }
+        do { visibleItems = try store.search(searchText, filter: filter, sort: sort) }
         catch { visibleItems = []; errorMessage = error.localizedDescription }
         if !visibleItems.contains(where: { $0.id == selection }) {
             selection = visibleItems.first?.id

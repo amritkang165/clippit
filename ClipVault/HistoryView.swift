@@ -1,5 +1,6 @@
 // Purpose: Present a refined history browser with SQLite filters, native search, and a full clip preview.
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct HistoryView: View {
     @ObservedObject var store: ClipStore
@@ -52,6 +53,13 @@ struct HistoryView: View {
             .searchable(text: $searchText, isPresented: $isSearchPresented, placement: .toolbar, prompt: "Search your clipboard")
             .navigationTitle("ClipVault")
             .toolbar {
+                ToolbarItem {
+                    Button { exportText() } label: {
+                        Label("Export visible text…", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(!visibleItems.contains { $0.imagePath == nil })
+                    .help("Export text from the current search and filter as a JSON file.")
+                }
                 ToolbarItem {
                     Menu {
                         Picker("Sort history", selection: $sort) {
@@ -238,6 +246,18 @@ struct HistoryView: View {
             .font(.system(size: 11)).foregroundStyle(.secondary)
             .padding(.horizontal, 24).padding(.vertical, 11)
         }
+    }
+
+    private func exportText() {
+        let snapshot = visibleItems
+        let panel = NSSavePanel()
+        panel.title = "Export visible text clips"
+        panel.message = "Includes text from the current search and filter. Images are excluded. The exported file is not encrypted."
+        panel.allowedContentTypes = [.json]
+        panel.nameFieldStringValue = "ClipVault-text.json"
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do { try TextHistoryExport.encode(snapshot).write(to: url, options: .atomic) }
+        catch { errorMessage = error.localizedDescription }
     }
 
     private func count(for filter: ClipFilter) -> Int {

@@ -16,3 +16,32 @@ struct ClipItem: Identifiable, Equatable {
         return singleLine.count > 40 ? String(singleLine.prefix(39)) + "…" : singleLine
     }
 }
+
+// Transformations produce a copy; the stored entry remains unchanged.
+enum TextTransform: String, CaseIterable, Identifiable {
+    case trim = "Trim whitespace"
+    case singleLine = "Single line"
+    case uppercase = "UPPERCASE"
+    case lowercase = "lowercase"
+
+    var id: Self { self }
+
+    func apply(to text: String) -> String {
+        switch self {
+        case .trim: return text.trimmingCharacters(in: .whitespacesAndNewlines)
+        case .singleLine:
+            return text.components(separatedBy: .whitespacesAndNewlines)
+                .filter { !$0.isEmpty }.joined(separator: " ")
+        case .uppercase: return text.uppercased()
+        case .lowercase: return text.lowercased()
+        }
+    }
+}
+
+extension ClipItem {
+    func transformed(_ transform: TextTransform) -> ClipItem? {
+        guard imagePath == nil else { return nil }
+        return ClipItem(id: id, timestamp: timestamp, content: transform.apply(to: content),
+                        isPinned: isPinned)
+    }
+}

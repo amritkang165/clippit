@@ -9,3 +9,11 @@ enum ClipFilter: String, CaseIterable, Identifiable {
 
     var id: Self { self }
 }
+
+enum ClipSort: String, CaseIterable, Identifiable {
+    case newest = "Newest first"
+    case oldest = "Oldest first"
+    case pinnedFirst = "Pinned first"
+
+    var id: Self { self }
+}

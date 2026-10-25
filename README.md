@@ -7,6 +7,11 @@ ClipVault lives in the menu bar and supports searchable text and image history,
 pinned clips, filters, a global Command-Shift-V shortcut, and optional launch at
 login. Clipboard history is stored locally using SQLite and image files.
 
+Capture can be paused from the menu, and oversized text copies can be skipped
+using an optional character limit. History supports oldest/newest/pinned-first
+sorting, non-destructive text copy transformations, clear-unpinned, and export
+of the current text results as JSON.
+
 ## Guides
 
 - [Controls and retention](Docs/Usage.md)
@@ -67,3 +72,7 @@ five documentation commits were assigned October 22, 2026 dates, and eleven
 documentation and release-preparation commits were assigned October 23, 2026
 dates. Four further documentation commits were assigned October 24, 2026 dates.
 These assigned dates do not represent when the commits were actually created.
+
+The October 25, 2026 batch contains 25 implementation, test, and documentation
+commits added retrospectively. It replaces an earlier batch of empty markers;
+these dates do not indicate when the features were actually implemented.

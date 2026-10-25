@@ -147,6 +147,15 @@ struct HistoryView: View {
                         .contextMenu {
                             Button("Copy") { onCopy(item) }
                             Button("Copy and Paste") { onCopyAndPaste(item) }
+                            if item.imagePath == nil {
+                                Menu("Copy as") {
+                                    ForEach(TextTransform.allCases) { transform in
+                                        Button(transform.rawValue) {
+                                            if let copy = item.transformed(transform) { onCopy(copy) }
+                                        }
+                                    }
+                                }
+                            }
                             Button(item.isPinned ? "Unpin" : "Pin") { togglePin(item) }
                             Divider()
                             Button("Delete", role: .destructive) { delete(item) }

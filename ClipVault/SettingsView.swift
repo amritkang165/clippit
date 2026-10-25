@@ -7,6 +7,7 @@ struct SettingsView: View {
     @ObservedObject var loginItem: LoginItemStore
     @State private var errorMessage: String?
     @State private var maxItemsInput = ""
+    @State private var maxTextInput = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -43,6 +44,14 @@ struct SettingsView: View {
                     }
                 }
                 Section("Capture") {
+                    HStack {
+                        TextField("Maximum text characters", text: $maxTextInput)
+                            .onSubmit { applyTextLimit() }
+                        Button("Apply") { applyTextLimit() }
+                            .disabled(Int(maxTextInput) == settings.maxTextCharacters)
+                    }
+                    Text("0 means unlimited. Longer copies are skipped, not truncated.")
+                        .font(.caption).foregroundStyle(.secondary)
                     Toggle("Pause clipboard capture", isOn: $settings.capturePaused)
                     Text("Saved clips remain available. Copies made while paused are not imported when you resume.")
                         .font(.caption).foregroundStyle(.secondary)
@@ -70,7 +79,9 @@ struct SettingsView: View {
         .onAppear {
             loginItem.refresh()
             maxItemsInput = String(settings.maxItems)
+            maxTextInput = String(settings.maxTextCharacters)
         }
+        .onChange(of: settings.maxTextCharacters) { _, value in maxTextInput = String(value) }
         .onChange(of: settings.maxItems) { _, value in maxItemsInput = String(value) }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             loginItem.refresh()
@@ -80,6 +91,14 @@ struct SettingsView: View {
         )) {
             Button("OK") { errorMessage = nil }
         } message: { Text(errorMessage ?? "") }
+    }
+
+    private func applyTextLimit() {
+        guard let value = Int(maxTextInput), value >= 0 else {
+            errorMessage = "Enter a whole number of 0 or more for Maximum text characters."
+            return
+        }
+        settings.maxTextCharacters = value
     }
 
     private func applyHistoryLimit() {

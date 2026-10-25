@@ -9,6 +9,11 @@ final class ClipboardMonitor {
     init(settings: SettingsStore, pasteboard: NSPasteboard = .general) {
         self.settings = settings
         self.pasteboard = pasteboard
+        settings.onCapturePauseChange = { [weak self] in
+            guard let self else { return }
+            // Do not import content copied while paused, even between timer ticks.
+            self.lastCount = self.pasteboard.changeCount
+        }
     }
 
     var onImage: ((Data) -> Void)?
@@ -68,6 +73,7 @@ final class ClipboardMonitor {
         guard currentCount != lastCount else { return }
         lastCount = currentCount
 
+        guard !settings.capturePaused else { return }
         if settings.ignorePasswords && shouldIgnorePasswordCopy() { return }
 
         // Prefer image data when a copy offers both image and text representations.

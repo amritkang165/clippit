@@ -18,6 +18,8 @@ struct ClipVaultApp: App {
                     appDelegate.copy(item, andPaste: false)
                 }, onClearAll: {
                     appDelegate.confirmClearAll()
+                }, onClearUnpinned: {
+                    appDelegate.confirmClearAll(keepingPins: true)
                 }, onSettings: {
                     appDelegate.openSettings()
                 })
@@ -140,7 +142,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 
-    func confirmClearAll() {
+    func confirmClearAll(keepingPins: Bool = false) {
         guard let store, !store.items.isEmpty, !isConfirmingClear else { return }
         isConfirmingClear = true
         // Let the menu finish closing before presenting a native confirmation dialog.
@@ -150,10 +152,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             NSApplication.shared.activate(ignoringOtherApps: true)
             let alert = NSAlert()
             alert.alertStyle = .warning
-            alert.messageText = "Clear all clipboard history?"
-            alert.informativeText = "This permanently deletes all saved clips, including pinned clips and saved images. Your current clipboard stays unchanged."
+            alert.messageText = keepingPins ? "Clear unpinned history?" : "Clear all clipboard history?"
+            alert.informativeText = keepingPins
+                ? "This permanently deletes unpinned clips and their images. Pinned clips and your current clipboard stay unchanged."
+                : "This permanently deletes all saved clips, including pinned clips and saved images. Your current clipboard stays unchanged."
             alert.addButton(withTitle: "Cancel")
-            let clearButton = alert.addButton(withTitle: "Clear All")
+            let clearButton = alert.addButton(withTitle: keepingPins ? "Clear Unpinned" : "Clear All")
             clearButton.hasDestructiveAction = true
             clearButton.keyEquivalent = ""
             // Return defaults to Cancel; deletion requires choosing Clear All.
@@ -161,7 +165,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             alert.buttons[0].keyEquivalentModifierMask = []
             guard alert.runModal() == .alertSecondButtonReturn else { return }
             do {
-                try store.clearAll()
+                if keepingPins { try store.clearUnpinned() }
+                else { try store.clearAll() }
             } catch {
                 showError(error)
             }

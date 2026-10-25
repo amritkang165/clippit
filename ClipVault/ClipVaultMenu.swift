@@ -7,6 +7,7 @@ struct ClipVaultMenu: View {
     let onOpenHistory: () -> Void
     let onCopy: (ClipItem) -> Void
     let onClearAll: () -> Void
+    let onClearUnpinned: () -> Void
     let onSettings: () -> Void
 
     var body: some View {
@@ -29,6 +30,8 @@ struct ClipVaultMenu: View {
         Button("Open ClipVault", action: onOpenHistory)
         Button("Settings…", action: onSettings)
             .keyboardShortcut(",", modifiers: .command)
+        Button("Clear unpinned…", action: onClearUnpinned)
+            .disabled(!store.items.contains { !$0.isPinned })
         Button("Clear all…", action: onClearAll)
             .disabled(store.items.isEmpty)
         Divider()

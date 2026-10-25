@@ -32,5 +32,20 @@ import AppKit
     write("resumed")
     poll()
     precondition(captured == ["resumed"])
+    settings.maxTextCharacters = 2
+    precondition(SettingsStore(defaults: defaults).maxTextCharacters == 2)
+    write("abc")
+    poll()
+    precondition(captured == ["resumed"])
+    precondition(board.string(forType: .string) == "abc")
+    write("👨‍👩‍👧‍👦é")
+    poll()
+    precondition(captured.last == "👨‍👩‍👧‍👦é")
+    settings.maxTextCharacters = -1
+    precondition(settings.maxTextCharacters == 0)
+    write("unlimited again")
+    poll()
+    precondition(captured.last == "unlimited again")
+    print("PASS: Unicode text limits, persistence, and untouched oversized clipboard")
     print("PASS: paused capture, persisted preference, and no replay on resume")
 }

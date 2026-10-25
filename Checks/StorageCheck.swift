@@ -78,6 +78,7 @@ import AppKit
         precondition(pasteboard.string(forType: .string) == "restored")
         precondition(captured == ["test text"])
         monitor.stop()
+        checkCaptureControls()
         try checkImages(in: directory, settings: settings)
         try checkSearch(in: directory)
         try checkSearchFocus(in: directory)

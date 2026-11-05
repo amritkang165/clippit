@@ -17,3 +17,15 @@ enum ClipSort: String, CaseIterable, Identifiable {
 
     var id: Self { self }
 }
+
+// SF Symbols for the history navigation controls.
+extension ClipFilter {
+    var symbol: String {
+        switch self {
+        case .all: return "square.stack"
+        case .text: return "text.alignleft"
+        case .images: return "photo"
+        case .pinned: return "pin"
+        }
+    }
+}

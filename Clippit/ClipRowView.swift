@@ -8,20 +8,20 @@ struct ClipRowView: View {
     @State private var isHovered = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             Group {
                 if let path = item.imagePath {
                     ClipThumbnail(path: path)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 } else {
                     Image(systemName: item.kind.symbol)
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(item.kind.tint)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 34, height: 34)
                         .background(item.kind.tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 11))
                 }
             }
-            VStack(alignment: .leading, spacing: 7) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(verbatim: item.rowPreview)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.primary)
@@ -53,14 +53,19 @@ struct ClipRowView: View {
             .help(item.isPinned ? "Unpin clip" : "Pin clip")
             .accessibilityLabel(item.isPinned ? "Unpin clip" : "Pin clip")
         }
-        .padding(12)
-        .frame(minHeight: 76)
-        .background(isSelected ? VaultStyle.accent.opacity(0.12) : VaultStyle.surface,
-                    in: RoundedRectangle(cornerRadius: 13))
-        .overlay(RoundedRectangle(cornerRadius: 13)
+        .padding(10)
+        .frame(minHeight: 64)
+        .background(isSelected ? VaultStyle.selection : (isHovered ? VaultStyle.sidebar : VaultStyle.surface),
+                    in: RoundedRectangle(cornerRadius: 11))
+        .overlay(RoundedRectangle(cornerRadius: 11)
             .strokeBorder(isSelected ? VaultStyle.accent.opacity(0.34) : VaultStyle.line, lineWidth: 1))
+        .overlay(alignment: .leading) {
+            if isSelected {
+                Capsule().fill(VaultStyle.accent).frame(width: 3, height: 24).padding(.leading, 1)
+            }
+        }
         .background(CardListSelectionStyle().frame(width: 0, height: 0))
-        .contentShape(RoundedRectangle(cornerRadius: 13))
+        .contentShape(RoundedRectangle(cornerRadius: 11))
         .onHover { isHovered = $0 }
     }
 }

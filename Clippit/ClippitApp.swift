@@ -95,7 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 self?.copy(item, andPaste: true)
             })
             let window = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 960, height: 680),
+                contentRect: NSRect(x: 0, y: 0, width: 1040, height: 700),
                 styleMask: [.titled, .closable, .miniaturizable, .resizable],
                 backing: .buffered, defer: false
             )

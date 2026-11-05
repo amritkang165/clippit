@@ -17,7 +17,7 @@ struct ClipDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("PREVIEW").font(.system(size: 10, weight: .semibold)).tracking(1.6)
+                Text("SELECTED CLIP").font(.system(size: 10, weight: .semibold)).tracking(1.3)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button(action: onPin) {
@@ -29,11 +29,18 @@ struct ClipDetailView: View {
                 .help(item.isPinned ? "Unpin clip" : "Pin clip")
             }
 
-            VStack(alignment: .leading, spacing: 7) {
-                Label(item.kind.label, systemImage: item.kind.symbol)
-                    .font(.system(size: 24, weight: .semibold))
-                Text(item.timestamp.formatted(date: .abbreviated, time: .shortened))
-                    .font(.system(size: 11)).foregroundStyle(.secondary)
+            HStack(spacing: 12) {
+                Image(systemName: item.kind.symbol)
+                    .font(.system(size: 19, weight: .medium))
+                    .foregroundStyle(item.kind.tint)
+                    .frame(width: 44, height: 44)
+                    .background(item.kind.tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(item.kind == .image ? "Image clip" : item.kind == .link ? "Saved link" : "Text clip")
+                        .font(.system(size: 21, weight: .semibold, design: .rounded))
+                    Text(item.timestamp.formatted(date: .abbreviated, time: .shortened))
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                }
             }
 
             Group {
@@ -66,20 +73,20 @@ struct ClipDetailView: View {
                             .lineSpacing(6)
                             .textSelection(.enabled)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .padding(20)
+                            .padding(22)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .background(VaultStyle.surface, in: RoundedRectangle(cornerRadius: 16))
-            .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(VaultStyle.line))
+            .background(VaultStyle.surface, in: RoundedRectangle(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(VaultStyle.line))
 
             HStack {
                 Text(item.imagePath == nil ? "\(item.content.count.formatted()) characters" : "PNG image")
                     .font(.system(size: 11)).foregroundStyle(.secondary)
                 Spacer()
                 Button(role: .destructive, action: onDelete) {
-                    Image(systemName: "trash").frame(width: 24, height: 24)
+                    Image(systemName: "trash").foregroundStyle(.secondary).frame(width: 28, height: 28)
                 }
                 .buttonStyle(.borderless)
                 .help("Delete clip")
@@ -88,7 +95,11 @@ struct ClipDetailView: View {
 
             HStack(spacing: 10) {
                 Button(action: onCopy) {
-                    Label("Copy", systemImage: "doc.on.doc")
+                    HStack {
+                        Label("Copy", systemImage: "doc.on.doc")
+                        Spacer()
+                        Text("↵").opacity(0.65)
+                    }.padding(.horizontal, 14)
                 }
                 .buttonStyle(VaultActionButtonStyle(primary: true))
                 .help("Copy clip (⌘C)")
@@ -126,7 +137,11 @@ struct ClipDetailView: View {
     }
 
     private var imageTextControls: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Text from image", systemImage: "text.viewfinder")
+                .font(.system(size: 12, weight: .semibold))
+            Text("Read and copy text, right on your Mac.")
+                .font(.system(size: 11)).foregroundStyle(.secondary)
             HStack {
                 Button {
                     recognizedText = nil
@@ -166,5 +181,7 @@ struct ClipDetailView: View {
                 }
             }
         }
+        .padding(14)
+        .background(VaultStyle.sidebar.opacity(0.65), in: RoundedRectangle(cornerRadius: 10))
     }
 }

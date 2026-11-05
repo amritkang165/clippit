@@ -4,8 +4,10 @@ import SwiftUI
 enum VaultStyle {
     static let accent = adaptive(light: (0.10, 0.43, 0.37), dark: (0.43, 0.82, 0.69))
     static let onAccent = adaptive(light: (1, 1, 1), dark: (0.05, 0.14, 0.12))
-    static let canvas = adaptive(light: (0.97, 0.97, 0.95), dark: (0.10, 0.12, 0.13))
-    static let surface = adaptive(light: (1, 1, 0.99), dark: (0.14, 0.16, 0.17))
+    static let canvas = adaptive(light: (0.975, 0.978, 0.98), dark: (0.085, 0.095, 0.105))
+    static let sidebar = adaptive(light: (0.935, 0.95, 0.95), dark: (0.105, 0.12, 0.13))
+    static let selection = adaptive(light: (0.85, 0.93, 0.90), dark: (0.13, 0.24, 0.22))
+    static let surface = adaptive(light: (1, 1, 0.99), dark: (0.125, 0.14, 0.15))
     static let line = Color.primary.opacity(0.08)
 
     private static func adaptive(light: (CGFloat, CGFloat, CGFloat), dark: (CGFloat, CGFloat, CGFloat)) -> Color {

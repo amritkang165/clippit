@@ -22,7 +22,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="Design/Previews/history-dark-window.png">
   <source media="(prefers-color-scheme: light)" srcset="Design/Previews/history-light-window.png">
-  <img src="Design/Previews/history-light-window.png" alt="Clippit history window with searchable clip cards, filters, and a full text preview" width="100%">
+  <img src="Design/Previews/history-light-window.png" alt="Clippit history window with a library sidebar, searchable clip cards, and a full text preview" width="100%">
 </picture>
 
 <p align="center"><sub>Native SwiftUI. Light and dark appearances. Sample content shown.</sub></p>

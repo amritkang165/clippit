@@ -20,33 +20,21 @@ struct HistoryView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                header
-                Rectangle().fill(VaultStyle.line).frame(height: 1)
-                if store.items.isEmpty {
-                    emptyHistory
-                } else {
-                    GeometryReader { geometry in
-                        HStack(spacing: 0) {
-                            clipList.frame(width: max(330, geometry.size.width * 0.46))
+                GeometryReader { geometry in
+                    HStack(spacing: 0) {
+                        if geometry.size.width >= 940 {
+                            librarySidebar.frame(width: 176)
                             Rectangle().fill(VaultStyle.line).frame(width: 1)
-                            if let item = selectedItem {
-                                ClipDetailView(item: item, onCopy: { onCopy(item) },
-                                               onPaste: { onCopyAndPaste(item) },
-                                               onPin: { togglePin(item) }, onDelete: { delete(item) },
-                                               onCopyText: { text in
-                                                   onCopy(ClipItem(id: UUID(), timestamp: Date(),
-                                                                   content: text, isPinned: false))
-                                               })
-                                    .id(item.id)
+                        }
+                        VStack(spacing: 0) {
+                            if geometry.size.width < 940 {
+                                header
+                                Rectangle().fill(VaultStyle.line).frame(height: 1)
+                            }
+                            if store.items.isEmpty {
+                                emptyHistory
                             } else {
-                                VStack(spacing: 12) {
-                                    Image(systemName: "doc.text.magnifyingglass")
-                                        .font(.system(size: 32, weight: .light))
-                                        .foregroundStyle(VaultStyle.accent.opacity(0.7))
-                                    Text("Select a clip to preview it")
-                                        .font(.system(size: 13)).foregroundStyle(.secondary)
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                historyPanels(width: geometry.size.width - (geometry.size.width >= 940 ? 177 : 0))
                             }
                         }
                     }
@@ -109,65 +97,125 @@ struct HistoryView: View {
         .frame(minWidth: 760, minHeight: 520)
     }
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 22) {
-            HStack(spacing: 12) {
-                VaultMark()
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Clippit").font(.system(size: 24, weight: .semibold, design: .rounded))
-                    Text("\(store.items.count) saved · \(store.items.filter(\.isPinned).count) pinned")
-                        .font(.system(size: 11)).foregroundStyle(.secondary)
+    private func historyPanels(width: CGFloat) -> some View {
+        HStack(spacing: 0) {
+            clipList.frame(width: max(290, width * 0.42))
+            Rectangle().fill(VaultStyle.line).frame(width: 1)
+            if let item = selectedItem {
+                ClipDetailView(item: item, onCopy: { onCopy(item) },
+                               onPaste: { onCopyAndPaste(item) },
+                               onPin: { togglePin(item) }, onDelete: { delete(item) },
+                               onCopyText: { text in
+                                   onCopy(ClipItem(id: UUID(), timestamp: Date(), content: text, isPinned: false))
+                               })
+                    .id(item.id)
+            } else {
+                VStack(spacing: 12) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.system(size: 32, weight: .light))
+                        .foregroundStyle(VaultStyle.accent)
+                    Text("A little less searching.")
+                        .font(.system(size: 17, weight: .semibold))
+                    Text("Select a clip to see the whole picture.")
+                        .font(.system(size: 12)).foregroundStyle(.secondary)
                 }
-                Spacer()
-                Label("On this Mac", systemImage: "desktopcomputer")
-                    .font(.system(size: 11, weight: .medium)).foregroundStyle(.secondary)
-                    .padding(.horizontal, 10).padding(.vertical, 7)
-                    .background(VaultStyle.surface, in: Capsule())
-                    .overlay(Capsule().strokeBorder(VaultStyle.line))
-                    .help("Your clipboard history is stored locally on this Mac.")
-            }
-            HStack(spacing: 6) {
-                ForEach(ClipFilter.allCases) { option in
-                    Button { filter = option } label: {
-                        HStack(spacing: 7) {
-                            Text(option.rawValue)
-                            Text("\(count(for: option))")
-                                .font(.system(size: 10, weight: .semibold, design: .rounded))
-                                .padding(.horizontal, 5).padding(.vertical, 2)
-                                .background(Color.primary.opacity(0.055), in: Capsule())
-                        }
-                        .font(.system(size: 12, weight: .medium))
-                        .padding(.horizontal, 12).padding(.vertical, 8)
-                        .foregroundStyle(filter == option ? VaultStyle.accent : Color.secondary)
-                        .background(filter == option ? VaultStyle.accent.opacity(0.10) : Color.clear,
-                                    in: RoundedRectangle(cornerRadius: 9))
-                        .contentShape(RoundedRectangle(cornerRadius: 9))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(filter == option ? .isSelected : [])
-                    .accessibilityLabel("\(option.rawValue), \(count(for: option)) clips")
-                }
-                Spacer(minLength: 0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .padding(.horizontal, 24).padding(.top, 22).padding(.bottom, 16)
+    }
+
+    private var librarySidebar: some View {
+        VStack(alignment: .leading, spacing: 26) {
+            HStack(spacing: 9) {
+                VaultMark(size: 30)
+                Text("Clippit").font(.system(size: 20, weight: .semibold, design: .rounded))
+            }
+            .padding(.top, 6)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("LIBRARY").font(.system(size: 9, weight: .semibold)).tracking(1.4)
+                    .foregroundStyle(.secondary).padding(.leading, 10).padding(.bottom, 4)
+                ForEach(ClipFilter.allCases) { option in
+                    filterButton(option, sidebar: true)
+                }
+            }
+            Spacer(minLength: 20)
+            VStack(alignment: .leading, spacing: 10) {
+                Image(systemName: "internaldrive")
+                    .font(.system(size: 20, weight: .light)).foregroundStyle(VaultStyle.accent)
+                Text("Yours to keep.").font(.system(size: 12, weight: .semibold))
+                Text("Your history stays\non this Mac.")
+                    .font(.system(size: 11)).foregroundStyle(.secondary).lineSpacing(3)
+            }
+            .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+            .background(VaultStyle.surface.opacity(0.7), in: RoundedRectangle(cornerRadius: 12))
+            HStack(spacing: 6) {
+                ShortcutBadge(text: "⌘⇧V")
+                Text("Quick access").font(.system(size: 10)).foregroundStyle(.secondary)
+            }
+        }
+        .padding(16)
+        .frame(maxHeight: .infinity)
+        .background(VaultStyle.sidebar)
+    }
+
+    private var header: some View {
+        HStack(spacing: 12) {
+            VaultMark(size: 28)
+            ForEach(ClipFilter.allCases) { option in
+                filterButton(option, sidebar: false)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 18).padding(.vertical, 12)
+        .background(VaultStyle.sidebar)
+    }
+
+    private func filterButton(_ option: ClipFilter, sidebar: Bool) -> some View {
+        Button { filter = option } label: {
+            HStack(spacing: 8) {
+                Image(systemName: option.symbol).frame(width: 15)
+                Text(option == .all ? "All clips" : option.rawValue)
+                if sidebar { Spacer(minLength: 0) }
+                Text("\(count(for: option))")
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(filter == option ? VaultStyle.accent : Color.secondary)
+            }
+            .font(.system(size: 12, weight: filter == option ? .semibold : .regular))
+            .padding(.horizontal, 10).padding(.vertical, 10)
+            .foregroundStyle(filter == option ? VaultStyle.accent : Color.secondary)
+            .background(filter == option ? VaultStyle.selection : Color.clear,
+                        in: RoundedRectangle(cornerRadius: 9))
+            .contentShape(RoundedRectangle(cornerRadius: 9))
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(filter == option ? .isSelected : [])
+        .accessibilityLabel("\(option.rawValue), \(count(for: option)) clips")
     }
 
     private var clipList: some View {
         VStack(spacing: 0) {
             HStack {
-                Text(searchText.isEmpty ? "RECENT CLIPS" : "SEARCH RESULTS")
-                    .font(.system(size: 10, weight: .semibold)).tracking(1.5)
+                Text(searchText.isEmpty ? (filter == .all ? "Clipboard" : filter.rawValue) : "Search results")
+                    .font(.system(size: 20, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.primary)
                 Spacer()
-                Text("\(visibleItems.count)").font(.system(size: 11, design: .rounded))
+                Text("\(visibleItems.count)").font(.system(size: 11, weight: .medium, design: .rounded))
+                    .padding(.horizontal, 8).padding(.vertical, 4)
+                    .background(VaultStyle.sidebar, in: Capsule())
             }
             .foregroundStyle(.secondary)
-            .padding(.horizontal, 24).padding(.top, 20).padding(.bottom, 12)
+            .padding(.horizontal, 18).padding(.top, 24).padding(.bottom, 6)
+            HStack {
+                Text(sort.rawValue).font(.system(size: 11)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            .padding(.horizontal, 18).padding(.bottom, 14)
             List(selection: $selection) {
                 ForEach(visibleItems) { item in
                     ClipRowView(item: item, isSelected: selection == item.id) { togglePin(item) }
                         .tag(item.id)
-                        .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                        .listRowInsets(EdgeInsets(top: 3, leading: 10, bottom: 3, trailing: 10))
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                         .contextMenu {

@@ -27,7 +27,7 @@
 
 <p align="center"><sub>Native SwiftUI. Light and dark appearances. Sample content shown.</sub></p>
 
-> **Development preview:** build from source for now. A signed, notarized download and Homebrew cask are not published yet. The repository is MIT-licensed and currently private while we prepare for public access.
+> **Development preview:** build from source for now. A signed, notarized download and Homebrew cask are not published yet. The source is public and MIT-licensed; contributions are welcome.
 
 ## The small things add up
 
@@ -64,7 +64,7 @@ These are renders of the actual app views using generated sample data, not perso
 
 ## Run it on your Mac
 
-You need **macOS 14 or later** and **Xcode** to run the app through its project. Repository access is required while the source is private.
+You need **macOS 14 or later** and **Xcode** to run the app through its project.
 
 ```sh
 git clone https://github.com/amritkang165/clippit.git
@@ -126,7 +126,7 @@ Pick something that interests you from the [issue tracker](https://github.com/am
 - **Improve a daily workflow:** [save recognized text](https://github.com/amritkang165/clippit/issues/3) or [customize the global shortcut](https://github.com/amritkang165/clippit/issues/4).
 - **Help ship it:** [automated checks](https://github.com/amritkang165/clippit/issues/8) and [release verification](https://github.com/amritkang165/clippit/issues/9).
 
-The [contribution guide](CONTRIBUTING.md) covers setup, testing, and pull requests. Public contributions can begin once repository access is opened; collaborators can work on these issues now.
+The [contribution guide](CONTRIBUTING.md) covers setup, testing, and pull requests. Fork the repository and pick an open issue to get started.
 
 ## Go a little deeper
 

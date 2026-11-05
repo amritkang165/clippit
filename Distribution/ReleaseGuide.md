@@ -119,12 +119,12 @@ Run the commands below from the project folder. This guide uses version `1.0`, b
 
 To regenerate the editable icon artwork, run `swift Tools/GenerateIcon.swift`, then `iconutil -c icns .build/Clippit.iconset -o Artwork/Clippit.icns` before making a new archive.
 
-## Private source and public downloads
+## Public source and release downloads
 
-The source repository `amritkang165/clippit` is private. For a public launch,
-use a separate public downloads repository or an HTTPS download host while
-keeping this source repository private. Upload only the final notarized DMG
-and its checksum; do not upload the source snapshots or clipboard data.
+The source repository `amritkang165/clippit` is public and MIT-licensed. Publish
+finished binaries as GitHub Release assets here or on an approved HTTPS host.
+Upload the final notarized DMG and its checksum as download assets; never upload
+clipboard data. GitHub source archives are development source, not installers.
 
 A future Homebrew cask should reference the publicly downloadable release
 asset and its final SHA-256 checksum. No cask or public download is currently

@@ -1,7 +1,7 @@
 <!-- Purpose: Define a minimal, non-sensitive diagnostic report for maintainers. -->
 # Reporting a problem
 
-Use the bug-report template when you have access to this private repository.
+Use the bug-report template in the public GitHub issue tracker.
 Include the macOS version, Clippit build, processor architecture, and whether
 you ran an installed app or a development build.
 
@@ -13,5 +13,6 @@ Accessibility permission was granted.
 
 Do not attach the history database, real clipboard images, passwords, signing
 keys, or unredacted screenshots. Reproducing a bug with sample content is more
-useful than sending an entire personal history. No public support inbox or
-public issue tracker has been established by this repository.
+useful than sending an entire personal history. The public issue tracker is available at
+https://github.com/amritkang165/clippit/issues. No separate support inbox has
+been established.

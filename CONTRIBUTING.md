@@ -1,9 +1,8 @@
 <!-- Purpose: Explain how contributors can claim work, validate changes, and submit focused pull requests. -->
 # Contributing to Clippit
 
-Clippit is MIT-licensed. The repository is currently private while public
-release preparation is underway; these instructions also apply to collaborators
-with access now. Public contributors will be able to fork it once it is public.
+Clippit is public and MIT-licensed. Fork the repository to contribute, or work
+in a branch if you already have collaborator access.
 
 ## Pick an issue
 

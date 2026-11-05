@@ -58,11 +58,18 @@ not encrypted by the app. Password-source filtering is best effort.
 See [the release guide](Distribution/ReleaseGuide.md) for signing, notarization,
 and DMG packaging. This repository does not itself provide a notarized release.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, checks, and how to pick an issue.
+The [GitHub issue tracker](https://github.com/amritkang165/ClipVault/issues)
+tracks confirmed bugs, feature proposals, and release work. The repository is
+currently private while we prepare for public access; MIT licensing does not
+itself change repository visibility.
+
 ## License
 
-ClipVault is proprietary software, free to use under the
-[ClipVault Software License](LICENSE). It is not open source. Redistribution,
-resale, and modification require permission, subject to the license terms.
+ClipVault is licensed under the [MIT License](LICENSE), which permits use,
+modification, and redistribution with the copyright and license notice retained.
 Dependencies retain their [own licenses](ClipVault/ThirdPartyNotices.txt).
 
 ## Repository history

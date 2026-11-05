@@ -128,5 +128,5 @@ and its checksum; do not upload the source snapshots or clipboard data.
 
 A future Homebrew cask should reference the publicly downloadable release
 asset and its final SHA-256 checksum. No cask or public download is currently
-published by this project. Keep the proprietary license and third-party
+published by this project. Keep the MIT license and third-party
 notices available with the distributed product.

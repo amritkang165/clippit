@@ -10,7 +10,7 @@ Complete this for each release; unchecked boxes are not verification claims.
 - [ ] Obtain accepted app notarization and validate its stapled ticket.
 - [ ] Package the DMG, notarize it, and validate its staple and signature.
 - [ ] Compute the checksum after all modifications to the DMG are complete.
-- [ ] Include the proprietary terms and dependency notices with distribution.
+- [ ] Include the MIT license and dependency notices with distribution.
 - [ ] Test a downloaded installation and launch on a clean user account.
 - [ ] Publish only release artifacts to the intended download host.
 - [ ] Record the actual download URL, version, and checksum.

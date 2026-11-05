@@ -1,38 +1,21 @@
-ClipVault Software License
-Purpose: Set the terms for use of ClipVault while reserving ownership of its code.
+MIT License
 
-Copyright (c) 2026 Amrit Kang. All rights reserved.
+Copyright (c) 2026 Amrit Kang
 
-1. Permission to use
-The copyright holder grants you a non-exclusive, non-transferable license to
-install and use authorized copies of ClipVault without charge, for personal or
-internal business purposes. You may make copies necessary for installation and
-backup.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-2. Restrictions
-Except with the copyright holder's prior written permission, you may not
-redistribute, sell, sublicense, publish the source code of, modify, or distribute
-derivative versions of ClipVault. These restrictions do not override rights
-that applicable law makes non-waivable. Access to the source code does not
-itself grant permission to reuse or distribute it.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-3. Ownership
-All rights not expressly granted are reserved. This license does not grant
-rights to the ClipVault name, logo, or other trademarks.
-
-4. Third-party components
-Third-party components remain subject to their respective licenses. Those
-licenses, including any rights they grant, take precedence for those components.
-See ClipVault/ThirdPartyNotices.txt.
-
-5. Disclaimer
-To the extent permitted by applicable law, the software is provided "AS IS",
-without warranties of any kind, express or implied, including merchantability,
-fitness for a particular purpose, and noninfringement. To the extent permitted
-by applicable law, the copyright holder shall not be liable for claims,
-damages, or other liability arising from use of the software.
-
-6. Termination
-This license terminates if you fail to comply with its terms. Upon termination,
-you must stop using the software and delete your copies. Third-party license
-rights are unaffected.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

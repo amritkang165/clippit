@@ -3,7 +3,12 @@ import Foundation
 import AppKit
 
 @main struct StorageCheck {
-    @MainActor static func main() throws {
+    @MainActor static func main() async throws {
+        try runSynchronousChecks()
+        try await checkImageTextRecognition()
+    }
+
+    @MainActor static func runSynchronousChecks() throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: directory) }

@@ -48,3 +48,18 @@ real hotkey, Accessibility, login, and downloaded-release testing.
   pin metadata and no image paths. Delete the temporary export when finished.
 
 These are manual acceptance steps, not a claim they have all been executed.
+
+## Image text recognition
+
+- Copy a screenshot containing clear text. Select it, click Recognize Text,
+  and verify the progress indicator, readable result, and Copy Text button.
+- Paste the result into a scratch editor and confirm plain text is copied.
+  The original Copy action should still restore the image.
+- Try an image without text and verify the no-text message; try a missing or
+  corrupted saved image and verify a recoverable error.
+- Start recognition, then select another clip or close history. Confirm no
+  previous image's text appears in the newly selected clip.
+- Check the image preview and recognized-text area at minimum window size and
+  in both light and dark appearances. Select and copy a portion of the result.
+- Verify recognition with networking disabled. Results are temporary and do not
+  become search results or text exports unless separately saved as text.

@@ -32,7 +32,11 @@ struct HistoryView: View {
                             if let item = selectedItem {
                                 ClipDetailView(item: item, onCopy: { onCopy(item) },
                                                onPaste: { onCopyAndPaste(item) },
-                                               onPin: { togglePin(item) }, onDelete: { delete(item) })
+                                               onPin: { togglePin(item) }, onDelete: { delete(item) },
+                                               onCopyText: { text in
+                                                   onCopy(ClipItem(id: UUID(), timestamp: Date(),
+                                                                   content: text, isPinned: false))
+                                               })
                                     .id(item.id)
                             } else {
                                 VStack(spacing: 12) {

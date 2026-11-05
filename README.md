@@ -10,7 +10,8 @@ login. Clipboard history is stored locally using SQLite and image files.
 Capture can be paused from the menu, and oversized text copies can be skipped
 using an optional character limit. History supports oldest/newest/pinned-first
 sorting, non-destructive text copy transformations, clear-unpinned, and export
-of the current text results as JSON.
+of the current text results as JSON. Image previews offer on-device text
+recognition with selectable results and Copy Text.
 
 ## Guides
 

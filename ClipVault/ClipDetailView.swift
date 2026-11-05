@@ -7,7 +7,12 @@ struct ClipDetailView: View {
     let onPaste: () -> Void
     let onPin: () -> Void
     let onDelete: () -> Void
+    let onCopyText: (String) -> Void
     @State private var previewImage: NSImage?
+    @State private var recognitionAttempt = 0
+    @State private var isRecognizing = false
+    @State private var recognizedText: String?
+    @State private var recognitionError: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -33,20 +38,27 @@ struct ClipDetailView: View {
 
             Group {
                 if item.imagePath != nil {
-                    if let previewImage {
-                        Image(nsImage: previewImage)
-                            .resizable().scaledToFit()
-                            .padding(16)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .accessibilityLabel("Selected clipboard image")
-                    } else {
-                        VStack(spacing: 10) {
-                            Image(systemName: "photo").font(.largeTitle)
-                            Text("Image preview unavailable").font(.callout)
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            if let previewImage {
+                                Image(nsImage: previewImage)
+                                    .resizable().scaledToFit()
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 200)
+                                    .accessibilityLabel("Selected clipboard image")
+                            } else {
+                                VStack(spacing: 10) {
+                                    Image(systemName: "photo").font(.largeTitle)
+                                    Text("Image preview unavailable").font(.callout)
+                                }
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity).frame(height: 120)
+                            }
+                            imageTextControls
                         }
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(16)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     ScrollView {
                         Text(verbatim: item.content)
@@ -94,6 +106,64 @@ struct ClipDetailView: View {
             previewImage = nil
             if let path = item.imagePath {
                 previewImage = ClipImages.thumbnail(at: path, maxPixelSize: 800)
+            }
+        }
+        .task(id: recognitionAttempt) {
+            guard recognitionAttempt > 0, let path = item.imagePath else { return }
+            do {
+                let text = try await ImageTextRecognizer.shared.recognize(at: URL(fileURLWithPath: path))
+                try Task.checkCancellation()
+                recognizedText = text
+                isRecognizing = false
+            } catch is CancellationError {
+                // The selected clip or window changed; do not apply an obsolete result.
+            } catch {
+                guard !Task.isCancelled else { return }
+                recognitionError = error.localizedDescription
+                isRecognizing = false
+            }
+        }
+    }
+
+    private var imageTextControls: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Button {
+                    recognizedText = nil
+                    recognitionError = nil
+                    isRecognizing = true
+                    recognitionAttempt += 1
+                } label: {
+                    Label(recognizedText == nil ? "Recognize Text" : "Scan Again",
+                          systemImage: "text.viewfinder")
+                }
+                .disabled(isRecognizing)
+                .help("Recognize text on this Mac using Apple Vision.")
+                if isRecognizing {
+                    ProgressView().controlSize(.small)
+                    Text("Reading image…").font(.caption).foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                if let text = recognizedText, !text.isEmpty {
+                    Button("Copy Text") { onCopyText(text) }
+                }
+            }
+            if let error = recognitionError {
+                Text(error).font(.caption).foregroundStyle(.red)
+            } else if let text = recognizedText {
+                if text.isEmpty {
+                    Text("No readable text found. Try a clearer image.")
+                        .font(.caption).foregroundStyle(.secondary)
+                } else {
+                    ScrollView {
+                        Text(verbatim: text)
+                            .font(.system(size: 13)).textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading).padding(10)
+                    }
+                    .frame(height: 120)
+                    .background(VaultStyle.surface, in: RoundedRectangle(cornerRadius: 8))
+                    .accessibilityLabel("Recognized image text")
+                }
             }
         }
     }

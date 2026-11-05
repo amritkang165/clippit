@@ -1,7 +1,7 @@
 <!-- Purpose: Explain the supported local development and validation paths. -->
 # Development workflow
 
-Use macOS 14 or later. Open the shared ClipVault scheme in Xcode for interactive
+Use macOS 14 or later. Open the shared Clippit scheme in Xcode for interactive
 app development. Package.swift also supports command-line compilation:
 
 ```sh

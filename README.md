@@ -1,7 +1,7 @@
-<!-- Purpose: Introduce ClipVault, show its native interface, and guide users and contributors. -->
+<!-- Purpose: Introduce Clippit, show its native interface, and guide users and contributors. -->
 <div align="center">
-  <img src="Artwork/ClipVault-1024.png" alt="ClipVault app icon" width="112" height="112">
-  <h1>ClipVault</h1>
+  <img src="Artwork/Clippit-1024.png" alt="Clippit app icon" width="112" height="112">
+  <h1>Clippit</h1>
   <p><strong>A calmer place for everything you copy.</strong></p>
   <p>A native macOS menu bar app for text, links, images, and the things you want to keep.</p>
   <p>
@@ -22,7 +22,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="Design/Previews/history-dark-window.png">
   <source media="(prefers-color-scheme: light)" srcset="Design/Previews/history-light-window.png">
-  <img src="Design/Previews/history-light-window.png" alt="ClipVault history window with searchable clip cards, filters, and a full text preview" width="100%">
+  <img src="Design/Previews/history-light-window.png" alt="Clippit history window with searchable clip cards, filters, and a full text preview" width="100%">
 </picture>
 
 <p align="center"><sub>Native SwiftUI. Light and dark appearances. Sample content shown.</sub></p>
@@ -31,7 +31,7 @@
 
 ## The small things add up
 
-Copy something. Bring up ClipVault with <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>V</kbd>. Find it again when you need it.
+Copy something. Bring up Clippit with <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>V</kbd>. Find it again when you need it.
 
 | | What you can do |
 | :--- | :--- |
@@ -48,15 +48,15 @@ Copy something. Bring up ClipVault with <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>V</kb
 
 ### Light
 
-![ClipVault in light appearance](Design/Previews/history-light-window.png)
+![Clippit in light appearance](Design/Previews/history-light-window.png)
 
 ### Dark
 
-![ClipVault in dark appearance](Design/Previews/history-dark-window.png)
+![Clippit in dark appearance](Design/Previews/history-dark-window.png)
 
 ### Make it yours
 
-![ClipVault settings with startup, capture, and history preferences](Design/Previews/settings-light-window.png)
+![Clippit settings with startup, capture, and history preferences](Design/Previews/settings-light-window.png)
 
 These are renders of the actual app views using generated sample data, not personal clipboard history.
 
@@ -67,12 +67,12 @@ These are renders of the actual app views using generated sample data, not perso
 You need **macOS 14 or later** and **Xcode** to run the app through its project. Repository access is required while the source is private.
 
 ```sh
-git clone https://github.com/amritkang165/ClipVault.git
-cd ClipVault
-open ClipVault.xcodeproj
+git clone https://github.com/amritkang165/clippit.git
+cd clippit
+open Clippit.xcodeproj
 ```
 
-Choose the **ClipVault** scheme, select **My Mac**, and press <kbd>⌘</kbd> <kbd>R</kbd>. Swift Package Manager resolves the dependencies automatically. Look for the clipboard icon in your menu bar, then copy some fresh text or an image.
+Choose the **Clippit** scheme, select **My Mac**, and press <kbd>⌘</kbd> <kbd>R</kbd>. Swift Package Manager resolves the dependencies automatically. Look for the clipboard icon in your menu bar, then copy some fresh text or an image.
 
 For command-line development and regression checks:
 
@@ -105,11 +105,13 @@ Clipboard history is stored locally. There is no clipboard upload, cloud sync, o
 └── clip-<UUID>.png      # Saved images
 ```
 
-Preferences use macOS UserDefaults. Password-copy filtering is enabled by default and uses identifiable clipboard markers and app information.
+The `ClipVault` folder name is retained for compatibility with existing installs.
+Preferences use macOS UserDefaults; the original bundle identifier is retained
+so existing settings remain available. Password-copy filtering is enabled by default and uses identifiable clipboard markers and app information.
 
 A few limits are worth understanding:
 
-- **History and exports are not encrypted by ClipVault.** Backups and other software with file access may copy them.
+- **History and exports are not encrypted by Clippit.** Backups and other software with file access may copy them.
 - **Password filtering is best effort.** It cannot identify every sensitive copy.
 - **OCR results are temporary.** They are not automatically saved, searched, or included in text exports.
 - **Clear all includes pins.** Clear unpinned preserves them. Neither clears the current system clipboard or existing exports.
@@ -118,11 +120,11 @@ Read the [privacy notes](Docs/Privacy.md) for the details.
 
 ## Build it with us
 
-Pick something that interests you from the [issue tracker](https://github.com/amritkang165/ClipVault/issues). Issues include scope, acceptance criteria, and suggested starting points. Comment before you start so we can avoid duplicate work.
+Pick something that interests you from the [issue tracker](https://github.com/amritkang165/clippit/issues). Issues include scope, acceptance criteria, and suggested starting points. Comment before you start so we can avoid duplicate work.
 
-- **Start small:** [show a successful-copy confirmation](https://github.com/amritkang165/ClipVault/issues/6).
-- **Improve a daily workflow:** [save recognized text](https://github.com/amritkang165/ClipVault/issues/3) or [customize the global shortcut](https://github.com/amritkang165/ClipVault/issues/4).
-- **Help ship it:** [automated checks](https://github.com/amritkang165/ClipVault/issues/8) and [release verification](https://github.com/amritkang165/ClipVault/issues/9).
+- **Start small:** [show a successful-copy confirmation](https://github.com/amritkang165/clippit/issues/6).
+- **Improve a daily workflow:** [save recognized text](https://github.com/amritkang165/clippit/issues/3) or [customize the global shortcut](https://github.com/amritkang165/clippit/issues/4).
+- **Help ship it:** [automated checks](https://github.com/amritkang165/clippit/issues/8) and [release verification](https://github.com/amritkang165/clippit/issues/9).
 
 The [contribution guide](CONTRIBUTING.md) covers setup, testing, and pull requests. Public contributions can begin once repository access is opened; collaborators can work on these issues now.
 
@@ -142,4 +144,4 @@ Swift, SwiftUI, AppKit, and Apple Vision, with [SQLite.swift](https://github.com
 
 ## License
 
-[MIT](LICENSE) © 2026 Amrit Kang. Use, modify, and redistribute with the copyright and license notice retained. Dependencies keep their [own licenses](ClipVault/ThirdPartyNotices.txt).
+[MIT](LICENSE) © 2026 Amrit Kang. Use, modify, and redistribute with the copyright and license notice retained. Dependencies keep their [own licenses](Clippit/ThirdPartyNotices.txt).

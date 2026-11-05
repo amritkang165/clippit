@@ -1,8 +1,8 @@
 <!-- Purpose: Explain opt-in login registration and installation requirements. -->
 # Launch at login
 
-Use a signed ClipVault.app installed in Applications. Open Settings and enable
-Launch at login. Registration is opt-in; starting ClipVault does not silently
+Use a signed Clippit.app installed in Applications. Open Settings and enable
+Launch at login. Registration is opt-in; starting Clippit does not silently
 register it.
 
 If macOS requires approval, follow the login-items settings link and approve

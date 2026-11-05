@@ -4,7 +4,7 @@
 Use disposable sample content in a development instance. These checks are a
 checklist, not a record that they have passed on every supported Mac.
 
-- Launch the app, copy `ClipVault sample A`, wait a second, and find it in history.
+- Launch the app, copy `Clippit sample A`, wait a second, and find it in history.
 - Copy the same text again immediately; confirm no consecutive duplicate appears.
 - Copy a second sample, quit, and relaunch; confirm both stored entries remain.
 - Search for part of a sample, then clear the query and try every filter.

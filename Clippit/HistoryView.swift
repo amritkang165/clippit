@@ -55,7 +55,7 @@ struct HistoryView: View {
             }
             .background(VaultStyle.canvas)
             .searchable(text: $searchText, isPresented: $isSearchPresented, placement: .toolbar, prompt: "Search your clipboard")
-            .navigationTitle("ClipVault")
+            .navigationTitle("Clippit")
             .toolbar {
                 ToolbarItem {
                     Button { exportText() } label: {
@@ -114,7 +114,7 @@ struct HistoryView: View {
             HStack(spacing: 12) {
                 VaultMark()
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("ClipVault").font(.system(size: 24, weight: .semibold, design: .rounded))
+                    Text("Clippit").font(.system(size: 24, weight: .semibold, design: .rounded))
                     Text("\(store.items.count) saved · \(store.items.filter(\.isPinned).count) pinned")
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
@@ -258,7 +258,7 @@ struct HistoryView: View {
         panel.title = "Export visible text clips"
         panel.message = "Includes text from the current search and filter. Images are excluded. The exported file is not encrypted."
         panel.allowedContentTypes = [.json]
-        panel.nameFieldStringValue = "ClipVault-text.json"
+        panel.nameFieldStringValue = "Clippit-text.json"
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do { try TextHistoryExport.encode(snapshot).write(to: url, options: .atomic) }
         catch { errorMessage = error.localizedDescription }

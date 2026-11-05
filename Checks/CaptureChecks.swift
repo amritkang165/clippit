@@ -2,7 +2,7 @@
 import AppKit
 
 @MainActor func checkCaptureControls() {
-    let suite = "ClipVaultCapture.\(UUID().uuidString)"
+    let suite = "ClippitCapture.\(UUID().uuidString)"
     let defaults = UserDefaults(suiteName: suite)!
     defer { defaults.removePersistentDomain(forName: suite) }
     let settings = SettingsStore(defaults: defaults)

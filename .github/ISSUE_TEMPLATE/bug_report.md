@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a reproducible ClipVault problem using non-sensitive sample data
+about: Report a reproducible Clippit problem using non-sensitive sample data
 title: ""
 labels: ""
 assignees: ""
@@ -9,7 +9,7 @@ assignees: ""
 
 **Environment**
 - macOS version:
-- ClipVault version/build:
+- Clippit version/build:
 - Apple Silicon or Intel:
 - Installed app or development build:
 

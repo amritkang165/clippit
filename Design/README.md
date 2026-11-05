@@ -1,8 +1,8 @@
-<!-- Purpose: Describe the ClipVault visual redesign and its runnable source package. -->
+<!-- Purpose: Describe the Clippit visual redesign and its runnable source package. -->
 
-ClipVault visual redesign
+Clippit visual redesign
 
-Open `ClipVault.xcodeproj` and run the ClipVault scheme on My Mac. The current project includes this redesign; the original Steps/Step1–Step10 snapshots are kept separately where available.
+Open `Clippit.xcodeproj` and run the Clippit scheme on My Mac. The current project includes this redesign; the original Steps/Step1–Step10 snapshots are kept separately where available.
 
 The history window now uses adaptive warm-neutral and charcoal surfaces, a teal accent, readable clip cards, filter counts, and a selected-clip preview. Text can be selected within the preview. Images are downsampled for a larger preview without changing the original stored file. Copy, Copy & Paste, Pin, and Delete are available alongside the preview. The newest matching clip is selected when there is no current valid selection.
 

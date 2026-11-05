@@ -1,7 +1,7 @@
 <!-- Purpose: Diagnose missing history without exposing clipboard contents. -->
 # Capture troubleshooting
 
-1. Confirm ClipVault is running by locating its menu bar icon.
+1. Confirm Clippit is running by locating its menu bar icon.
 2. Copy fresh dummy text after launch and wait at least one second. Startup
    does not import the existing clipboard contents.
 3. Open history, clear the search query, and choose All.

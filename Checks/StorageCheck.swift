@@ -28,7 +28,7 @@ import AppKit
         precondition(store.items.map(\.content) == ["first", "second"])
         _ = try store.save("third")
         precondition(store.items.map(\.content) == ["third", "first"])
-        let suite = "ClipVaultTests.\(UUID().uuidString)"
+        let suite = "ClippitTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!
         defer { defaults.removePersistentDomain(forName: suite) }
         let settings = SettingsStore(defaults: defaults)

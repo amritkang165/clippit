@@ -6,13 +6,13 @@ import HotKey
 
 @main
 @MainActor
-struct ClipVaultApp: App {
+struct ClippitApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
         MenuBarExtra {
             if let store = appDelegate.store {
-                ClipVaultMenu(store: store, settings: appDelegate.settings, onOpenHistory: {
+                ClippitMenu(store: store, settings: appDelegate.settings, onOpenHistory: {
                     appDelegate.openHistory()
                 }, onCopy: { item in
                     appDelegate.copy(item, andPaste: false)
@@ -99,7 +99,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 styleMask: [.titled, .closable, .miniaturizable, .resizable],
                 backing: .buffered, defer: false
             )
-            window.title = "ClipVault"
+            window.title = "Clippit"
             window.contentView = NSHostingView(rootView: view)
             window.minSize = NSSize(width: 760, height: 520)
             window.isReleasedWhenClosed = false
@@ -116,7 +116,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if settingsWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 520),
                                   styleMask: [.titled, .closable], backing: .buffered, defer: false)
-            window.title = "ClipVault Settings"
+            window.title = "Clippit Settings"
             window.contentView = NSHostingView(rootView: SettingsView(settings: settings, loginItem: loginItem))
             window.isReleasedWhenClosed = false
             window.center()
@@ -176,7 +176,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private func showError(_ error: Error) {
         NSApplication.shared.activate(ignoringOtherApps: true)
         let alert = NSAlert(error: error)
-        alert.messageText = "ClipVault could not complete the action"
+        alert.messageText = "Clippit could not complete the action"
         alert.runModal()
     }
 

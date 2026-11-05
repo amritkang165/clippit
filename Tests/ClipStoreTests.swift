@@ -1,6 +1,6 @@
 // Purpose: Verify persistence, ordering, and consecutive duplicate handling in a temporary database.
 import XCTest
-@testable import ClipVault
+@testable import Clippit
 
 final class ClipStoreTests: XCTestCase {
     func testPersistenceAndConsecutiveDuplicates() throws {

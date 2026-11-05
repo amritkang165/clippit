@@ -1,7 +1,7 @@
 <!-- Purpose: Map the current source components for maintainers. -->
 # Architecture
 
-`ClipVaultApp.swift` owns the app lifecycle, menu, history/settings windows,
+`ClippitApp.swift` owns the app lifecycle, menu, history/settings windows,
 monitor, global hotkey, and shared stores.
 
 | Component | Responsibility |

@@ -26,10 +26,10 @@ import AppKit
     }
 
     let recognizer = ImageTextRecognizer()
-    let image = try fixture("text.png", text: "ClipVault 12345")
+    let image = try fixture("text.png", text: "Clippit 12345")
     let original = try Data(contentsOf: image)
     let result = try await recognizer.recognize(at: image)
-    precondition(result.contains("ClipVault") && result.contains("12345"), "Unexpected OCR: \(result)")
+    precondition(result.contains("Clippit") && result.contains("12345"), "Unexpected OCR: \(result)")
     let unchanged = try Data(contentsOf: image)
     precondition(unchanged == original)
 
@@ -55,7 +55,7 @@ import AppKit
 
     // Copy the recognized string through the same monitor path used by history,
     // keeping this test completely separate from the system clipboard.
-    let suite = "ClipVaultOCR.\(UUID().uuidString)"
+    let suite = "ClippitOCR.\(UUID().uuidString)"
     let defaults = UserDefaults(suiteName: suite)!
     defer { defaults.removePersistentDomain(forName: suite) }
     let board = NSPasteboard.withUniqueName()

@@ -49,6 +49,6 @@ final class LoginItemStore: ObservableObject {
 private enum LoginItemError: LocalizedError {
     case appBundleRequired
     var errorDescription: String? {
-        "Launch at login requires the signed ClipVault.app. Install it in Applications and open it there."
+        "Launch at login requires the signed Clippit.app. Install it in Applications and open it there."
     }
 }

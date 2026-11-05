@@ -1,12 +1,12 @@
 <!-- Purpose: Explain local data storage and the limits of capture filtering. -->
 # Local data and privacy
 
-ClipVault stores text, timestamps, pin state, and image paths in
+Clippit stores text, timestamps, pin state, and image paths in
 `~/Library/Application Support/ClipVault/clips.sqlite3`. Captured images are
 stored alongside it as `clip-<UUID>.png`. Preferences are stored in macOS
 UserDefaults. The app has no clipboard upload or cloud-sync feature.
 
-These files are not encrypted by ClipVault. System backups or other software
+These files are not encrypted by Clippit. System backups or other software
 with access to this directory may copy them. Local storage does not mean that
 all other software on the Mac is prevented from accessing the files.
 
@@ -38,3 +38,6 @@ The export action writes only the visible text results to a JSON file at a
 location you choose. Exports include potentially sensitive text and are not
 encrypted. A synced destination may upload the file through other software.
 Exported files remain after clearing history and must be managed separately.
+
+The original `ClipVault` storage folder and bundle identifier are retained after
+the rename to Clippit so existing history and preferences remain available.

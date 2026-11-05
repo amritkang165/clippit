@@ -22,6 +22,7 @@ final class ClipStore: ObservableObject {
         if let databaseURL {
             url = databaseURL
         } else {
+            // Preserve the original storage location so renaming the app keeps existing history.
             let directory = try FileManager.default.url(
                 for: .applicationSupportDirectory, in: .userDomainMask,
                 appropriateFor: nil, create: true
@@ -171,7 +172,7 @@ final class ClipStore: ObservableObject {
 
     private func cleanupOrphanImages() {
         do { try removeOrphanImages() }
-        catch { NSLog("ClipVault image cleanup failed: %@", error.localizedDescription) }
+        catch { NSLog("Clippit image cleanup failed: %@", error.localizedDescription) }
     }
 
     private func removeOrphanImages() throws {

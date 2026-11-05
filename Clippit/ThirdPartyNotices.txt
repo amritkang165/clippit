@@ -1,4 +1,4 @@
-Purpose: Include the licenses for the SQLite.swift and HotKey packages distributed with ClipVault.
+Purpose: Include the licenses for the SQLite.swift and HotKey packages distributed with Clippit.
 
 SQLite.swift — https://github.com/stephencelis/SQLite.swift
 

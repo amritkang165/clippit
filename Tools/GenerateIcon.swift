@@ -1,4 +1,4 @@
-// Purpose: Draw the original ClipVault icon and generate every macOS AppIcon PNG size.
+// Purpose: Draw the original Clippit icon and generate every macOS AppIcon PNG size.
 import AppKit
 
 func color(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat = 1) -> NSColor {
@@ -59,8 +59,8 @@ func drawIcon(pixels: Int, to url: URL) throws {
 }
 
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-let assets = root.appendingPathComponent("ClipVault/Assets.xcassets/AppIcon.appiconset", isDirectory: true)
-let iconset = root.appendingPathComponent(".build/ClipVault.iconset", isDirectory: true)
+let assets = root.appendingPathComponent("Clippit/Assets.xcassets/AppIcon.appiconset", isDirectory: true)
+let iconset = root.appendingPathComponent(".build/Clippit.iconset", isDirectory: true)
 let artwork = root.appendingPathComponent("Artwork", isDirectory: true)
 for directory in [assets, iconset, artwork] {
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -74,10 +74,10 @@ for size in [16, 32, 128, 256, 512] {
         entries.append(["idiom": "mac", "size": "\(size)x\(size)", "scale": "\(scale)x", "filename": name])
     }
 }
-let info: [String: Any] = ["author": "ClipVault", "version": 1]
+let info: [String: Any] = ["author": "Clippit", "version": 1]
 try JSONSerialization.data(withJSONObject: ["images": entries, "info": info], options: [.prettyPrinted, .sortedKeys])
     .write(to: assets.appendingPathComponent("Contents.json"))
 try JSONSerialization.data(withJSONObject: ["info": info], options: [.prettyPrinted, .sortedKeys])
     .write(to: assets.deletingLastPathComponent().appendingPathComponent("Contents.json"))
-try drawIcon(pixels: 1024, to: artwork.appendingPathComponent("ClipVault-1024.png"))
+try drawIcon(pixels: 1024, to: artwork.appendingPathComponent("Clippit-1024.png"))
 print("Generated all ten macOS app-icon representations.")

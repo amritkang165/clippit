@@ -2,7 +2,7 @@
 # Reporting a problem
 
 Use the bug-report template when you have access to this private repository.
-Include the macOS version, ClipVault build, processor architecture, and whether
+Include the macOS version, Clippit build, processor architecture, and whether
 you ran an installed app or a development build.
 
 Describe the smallest reproduction using invented text or a harmless image.

@@ -5,8 +5,8 @@ import subprocess
 root = Path(__file__).resolve().parent.parent
 subprocess.run(["swift", "build"], cwd=root, check=True)
 build = Path(subprocess.check_output(["swift", "build", "--show-bin-path"], cwd=root, text=True).strip())
-sources = sorted(str(p) for p in (root / "ClipVault").glob("*.swift") if p.name != "ClipVaultApp.swift")
-executable = build / "ClipVaultChecks"
+sources = sorted(str(p) for p in (root / "Clippit").glob("*.swift") if p.name != "ClippitApp.swift")
+executable = build / "ClippitChecks"
 subprocess.run([
     "xcrun", "swiftc", "-I", str(build / "Modules"), *sources,
     *[str(p) for p in sorted((root / "Checks").glob("*.swift"))],

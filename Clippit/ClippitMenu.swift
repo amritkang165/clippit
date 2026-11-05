@@ -1,7 +1,7 @@
 // Purpose: Show the live clip count, ten recent clips, and menu actions.
 import SwiftUI
 
-struct ClipVaultMenu: View {
+struct ClippitMenu: View {
     @ObservedObject var store: ClipStore
     @ObservedObject var settings: SettingsStore
     let onOpenHistory: () -> Void
@@ -27,7 +27,7 @@ struct ClipVaultMenu: View {
         }
 
         if !store.recentItems.isEmpty { Divider() }
-        Button("Open ClipVault", action: onOpenHistory)
+        Button("Open Clippit", action: onOpenHistory)
         Button("Settings…", action: onSettings)
             .keyboardShortcut(",", modifiers: .command)
         Button("Clear unpinned…", action: onClearUnpinned)

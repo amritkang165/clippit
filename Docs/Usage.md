@@ -1,9 +1,9 @@
-<!-- Purpose: Describe everyday ClipVault controls and retention behavior. -->
-# Using ClipVault
+<!-- Purpose: Describe everyday Clippit controls and retention behavior. -->
+# Using Clippit
 
 Launch the app and use the clipboard icon in the menu bar to open history.
 Copy something after launching: existing clipboard contents are not imported
-at startup. While running, ClipVault checks for changes every half second.
+at startup. While running, Clippit checks for changes every half second.
 
 ## Finding and reusing clips
 
@@ -64,5 +64,5 @@ from the current search and filter, in their displayed order. It includes IDs,
 timestamps, content, and pin state, with formatVersion 1. Images and image paths
 are excluded. The save panel lets you choose the destination or cancel.
 
-Exports are unencrypted and are not a complete image-history backup. ClipVault
+Exports are unencrypted and are not a complete image-history backup. Clippit
 does not currently import them. Deleting history does not delete prior exports.

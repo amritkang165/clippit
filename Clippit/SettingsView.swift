@@ -32,10 +32,10 @@ struct SettingsView: View {
                     ))
                     .disabled(!loginItem.isAppBundle)
                     if !loginItem.isAppBundle {
-                        Text("Install ClipVault.app in Applications to enable launch at login.")
+                        Text("Install Clippit.app in Applications to enable launch at login.")
                             .font(.caption).foregroundStyle(.secondary)
                     } else if loginItem.status == .requiresApproval {
-                        Text("Approval is needed in Login Items before ClipVault can launch automatically.")
+                        Text("Approval is needed in Login Items before Clippit can launch automatically.")
                             .font(.caption).foregroundStyle(.secondary)
                         Button("Open Login Items…") { loginItem.openSystemSettings() }
                     } else if loginItem.status == .notFound {

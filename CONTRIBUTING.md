@@ -1,7 +1,7 @@
 <!-- Purpose: Explain how contributors can claim work, validate changes, and submit focused pull requests. -->
-# Contributing to ClipVault
+# Contributing to Clippit
 
-ClipVault is MIT-licensed. The repository is currently private while public
+Clippit is MIT-licensed. The repository is currently private while public
 release preparation is underway; these instructions also apply to collaborators
 with access now. Public contributors will be able to fork it once it is public.
 
@@ -15,8 +15,8 @@ an obligation to work on them. Leave unrelated features for separate issues.
 
 ## Set up
 
-Use a Mac running macOS 14 or later. Open `ClipVault.xcodeproj` in Xcode and run
-the ClipVault scheme on My Mac. Dependencies resolve through Swift Package
+Use a Mac running macOS 14 or later. Open `Clippit.xcodeproj` in Xcode and run
+the Clippit scheme on My Mac. Dependencies resolve through Swift Package
 Manager. Command-line builds and checks are also available:
 
 ```sh

@@ -143,19 +143,3 @@ Swift, SwiftUI, AppKit, and Apple Vision, with [SQLite.swift](https://github.com
 ## License
 
 [MIT](LICENSE) © 2026 Amrit Kang. Use, modify, and redistribute with the copyright and license notice retained. Dependencies keep their [own licenses](ClipVault/ThirdPartyNotices.txt).
-
-<details>
-<summary>About the repository history</summary>
-
-This project was imported into this repository on November 5, 2026. At the
-owner's request, seven initial commits were assigned October 21, 2026 dates,
-five documentation commits were assigned October 22, 2026 dates, and eleven
-documentation and release-preparation commits were assigned October 23, 2026
-dates. Four further documentation commits were assigned October 24, 2026 dates.
-These assigned dates do not represent when the commits were actually created.
-
-The October 25, 2026 batch contains 25 implementation, test, and documentation
-commits added retrospectively. It replaces an earlier batch of empty markers;
-these dates do not indicate when the features were actually implemented.
-
-</details>

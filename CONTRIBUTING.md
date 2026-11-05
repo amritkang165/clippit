@@ -46,8 +46,7 @@ Link the issue, describe the behavior before and after, and report actual test
 results. Include non-sensitive screenshots for UI changes when useful. Do not
 commit generated builds, databases, signing keys, or personal clipboard data.
 Use commit messages that describe actual changes, with normal current dates;
-do not add empty commits to inflate activity. Existing retrospectively assigned
-history is documented in README.md and is not a contribution convention.
+do not add empty commits to inflate activity.
 
 Contributions should be submitted under the project's MIT license. Preserve
 copyright notices and dependency licenses. A maintainer will review scope,

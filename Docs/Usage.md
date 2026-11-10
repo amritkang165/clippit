@@ -7,13 +7,13 @@ at startup. While running, Clippit checks for changes every half second.
 
 ## Finding and reusing clips
 
-Search matches stored text. Use All, Text only, Images, or Pinned to narrow the
+Search matches stored text and snippet names. Use All, Text only, Images, Pinned, or Snippets to narrow the
 list. Image contents are not searched with OCR. Select a clip to inspect its
 full text or image preview.
 
 | Control | Action |
 | --- | --- |
-| Command-Shift-V | Open history and select the search query |
+| Command-Shift-V (default; configurable in Settings) | Open history and select the search query |
 | Return on a selected row | Copy the clip and keep history open |
 | Command-C on a selected row | Copy the clip |
 | Command-Shift-C on a selected row | Copy and paste into the previous app |
@@ -23,6 +23,30 @@ full text or image preview.
 Text fields retain normal text-editing shortcuts. Copy and Paste needs
 Accessibility permission; copying alone does not use simulated keystrokes.
 The menu also offers the ten newest clips for quick copying.
+
+## Your history shortcut
+
+In Settings → Open history, choose Record shortcut and press a letter, number,
+Space or F1–F12 with Command or Control (Option and Shift can also be included).
+Escape cancels. Keys are stored by physical key position; the displayed key
+names use the US keyboard layout. Reset to default restores Command-Shift-V.
+The binding survives restarts and the menu/library hints update immediately.
+When macOS refuses a binding, the previous shortcut remains active. Some
+system-reserved shortcuts cannot be detected reliably; choose another if one
+does not fire. Opening history does not require Accessibility permission.
+
+## Named snippets
+
+Choose New snippet in the toolbar, or Save as snippet from a text clip's detail
+view or context menu. Give it a name and text; whitespace-only fields are not
+accepted. Unicode and line breaks are kept. Saving a clip as a snippet leaves
+the original history entry unchanged. Use Snippets to find and edit saved
+text, or search by name or content. Copy uses the same clipboard path as
+history and does not capture a second history entry.
+
+Snippets are local, do not count toward the history limit, and survive both
+Clear history actions. Delete a snippet explicitly and confirm to remove it.
+There is no automatic text expansion or cloud sync.
 
 ## Retention
 
@@ -61,7 +85,8 @@ after confirmation. Pins remain. Clear all still removes pins too.
 
 Use Export visible text in the toolbar to save JSON containing the text entries
 from the current search and filter, in their displayed order. It includes IDs,
-timestamps, content, and pin state, with formatVersion 1. Images and image paths
+timestamps, content, and pin state. Exports containing snippets use formatVersion
+2 and include their snippetTitle; history-only exports retain formatVersion 1. Images and image paths
 are excluded. The save panel lets you choose the destination or cancel.
 
 Exports are unencrypted and are not a complete image-history backup. Clippit

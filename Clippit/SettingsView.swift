@@ -8,6 +8,7 @@ struct SettingsView: View {
     @State private var errorMessage: String?
     @State private var maxItemsInput = ""
     @State private var maxTextInput = ""
+    @State private var recordingShortcut = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -22,6 +23,19 @@ struct SettingsView: View {
             .padding(24)
             Rectangle().fill(VaultStyle.line).frame(height: 1)
             Form {
+                Section("Open history") {
+                    HStack {
+                        Text(settings.historyShortcut.display)
+                        Spacer()
+                        Button("Record shortcut…") { recordingShortcut = true }
+                        Button("Reset to default") { applyShortcut(.default) }
+                    }
+                    Text("Requires Command or Control. Some shortcuts reserved by macOS or other apps may not be available.")
+                        .font(.caption).foregroundStyle(.secondary)
+                    if let error = settings.shortcutError {
+                        Text(error).font(.caption).foregroundStyle(.red)
+                    }
+                }
                 Section("Startup") {
                     Toggle("Launch at login", isOn: Binding(
                         get: { loginItem.isRequested },
@@ -83,6 +97,9 @@ struct SettingsView: View {
         }
         .onChange(of: settings.maxTextCharacters) { _, value in maxTextInput = String(value) }
         .onChange(of: settings.maxItems) { _, value in maxItemsInput = String(value) }
+        .sheet(isPresented: $recordingShortcut) {
+            ShortcutRecorder { applyShortcut($0) }
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             loginItem.refresh()
         }
@@ -99,6 +116,11 @@ struct SettingsView: View {
             return
         }
         settings.maxTextCharacters = value
+    }
+
+    private func applyShortcut(_ shortcut: HistoryShortcut) {
+        do { try settings.setHistoryShortcut(shortcut) }
+        catch { settings.shortcutError = error.localizedDescription }
     }
 
     private func applyHistoryLimit() {

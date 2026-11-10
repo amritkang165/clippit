@@ -7,6 +7,17 @@ final class SettingsStore: ObservableObject {
     var onMaxItemsChange: ((Int) -> Void)?
 
     var onCapturePauseChange: (() -> Void)?
+    var onShortcutChange: ((HistoryShortcut) throws -> Void)?
+    @Published private(set) var historyShortcut: HistoryShortcut
+    @Published var shortcutError: String?
+
+    func setHistoryShortcut(_ value: HistoryShortcut) throws {
+        guard value.isValid else { throw ShortcutError.invalid }
+        try onShortcutChange?(value)
+        defaults.set(try JSONEncoder().encode(value), forKey: "historyShortcut")
+        historyShortcut = value
+        shortcutError = nil
+    }
 
     @Published var maxTextCharacters: Int {
         didSet {
@@ -36,6 +47,8 @@ final class SettingsStore: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        let saved = defaults.data(forKey: "historyShortcut").flatMap { try? JSONDecoder().decode(HistoryShortcut.self, from: $0) }
+        historyShortcut = saved?.isValid == true ? saved! : .default
         defaults.register(defaults: ["maxItems": 500, "ignorePasswords": true])
         maxTextCharacters = max(0, defaults.integer(forKey: "maxTextCharacters"))
         capturePaused = defaults.bool(forKey: "capturePaused")

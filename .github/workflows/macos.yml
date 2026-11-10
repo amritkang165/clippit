@@ -1,0 +1,49 @@
+# Purpose: Build both project formats and run isolated regression checks without signing secrets.
+name: macOS checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: macos-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Record environment
+        run: |
+          mkdir -p check-logs
+          { sw_vers; uname -m; xcodebuild -version; swift --version; } | tee check-logs/environment.log
+      - name: SwiftPM build and unit tests
+        run: swift test --build-system native 2>&1 | tee check-logs/unit.log
+      - name: Core checks (temporary stores, private pasteboards, native UI)
+        if: ${{ !cancelled() }}
+        run: python3 Checks/run.py --suite core 2>&1 | tee check-logs/core.log
+      - name: Real on-device OCR (including CPU fallback)
+        if: ${{ !cancelled() }}
+        run: python3 Checks/run.py --suite ocr 2>&1 | tee check-logs/ocr.log
+      - name: Xcode app build without signing
+        if: ${{ !cancelled() }}
+        run: >-
+          xcodebuild -project Clippit.xcodeproj -scheme Clippit
+          -destination 'platform=macOS' -derivedDataPath DerivedData
+          CODE_SIGNING_ALLOWED=NO build 2>&1 | tee check-logs/xcode.log
+      - name: Preserve check logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: macos-check-logs
+          path: check-logs/
+          retention-days: 14

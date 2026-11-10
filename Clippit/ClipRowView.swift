@@ -28,7 +28,7 @@ struct ClipRowView: View {
                     .lineLimit(2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: 6) {
-                    Text(item.kind.label)
+                    Text(item.isSnippet ? "Snippet" : item.kind.label)
                     Text("·")
                     TimelineView(.periodic(from: .now, by: 30)) { context in
                         Text(HistoryView.relativeTime(item.timestamp, now: context.date))
@@ -41,17 +41,19 @@ struct ClipRowView: View {
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(.secondary)
             }
-            Button(action: onPin) {
-                Image(systemName: item.isPinned ? "pin.fill" : "pin")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(item.isPinned ? VaultStyle.accent : Color.secondary)
-                    .frame(width: 28, height: 32)
-                    .contentShape(Rectangle())
+            if !item.isSnippet {
+                Button(action: onPin) {
+                    Image(systemName: item.isPinned ? "pin.fill" : "pin")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(item.isPinned ? VaultStyle.accent : Color.secondary)
+                        .frame(width: 28, height: 32)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .opacity(item.isPinned || isHovered || isSelected ? 1 : 0.45)
+                .help(item.isPinned ? "Unpin clip" : "Pin clip")
+                .accessibilityLabel(item.isPinned ? "Unpin clip" : "Pin clip")
             }
-            .buttonStyle(.plain)
-            .opacity(item.isPinned || isHovered || isSelected ? 1 : 0.45)
-            .help(item.isPinned ? "Unpin clip" : "Pin clip")
-            .accessibilityLabel(item.isPinned ? "Unpin clip" : "Pin clip")
         }
         .padding(10)
         .frame(minHeight: 64)

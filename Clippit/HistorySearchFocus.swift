@@ -9,6 +9,15 @@ final class HistoryPresentation: ObservableObject {
     func requestSearchFocus() {
         focusRequest += 1
     }
+
+    @MainActor func show(_ window: NSWindow, activate: @MainActor () -> Void = {
+        NSApplication.shared.activate(ignoringOtherApps: true)
+    }) {
+        activate()
+        if window.isMiniaturized { window.deminiaturize(nil) }
+        window.makeKeyAndOrderFront(nil)
+        requestSearchFocus()
+    }
 }
 
 struct HistorySearchFocus: NSViewRepresentable {

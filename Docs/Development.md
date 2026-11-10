@@ -19,3 +19,6 @@ verification checklist for real hotkey, paste, and login behavior.
 
 Keep generated output under ignored build/export directories. Do not commit
 signing credentials, user databases, or personal clipboard screenshots.
+
+See [macOS CI](CI.md) for workflow configuration, Xcode source-list validation,
+unit tests and separate core/OCR check suites.

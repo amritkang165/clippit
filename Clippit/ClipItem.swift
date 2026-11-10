@@ -7,8 +7,11 @@ struct ClipItem: Identifiable, Equatable {
     let content: String
     var isPinned: Bool
     var imagePath: String? = nil
+    var snippetTitle: String? = nil
+    var isSnippet: Bool { snippetTitle != nil }
 
     var menuTitle: String {
+        if let snippetTitle { return "Snippet: " + String(snippetTitle.prefix(40)) }
         if imagePath != nil { return "🖼 Image" }
         let singleLine = content.components(separatedBy: .whitespacesAndNewlines)
             .filter { !$0.isEmpty }.joined(separator: " ")
@@ -56,15 +59,17 @@ struct TextHistoryExport: Codable {
         let timestamp: Date
         let content: String
         let isPinned: Bool
+        let snippetTitle: String?
     }
 
     static func encode(_ items: [ClipItem]) throws -> Data {
         let entries = items.filter { $0.imagePath == nil }.map {
-            Entry(id: $0.id, timestamp: $0.timestamp, content: $0.content, isPinned: $0.isPinned)
+            Entry(id: $0.id, timestamp: $0.timestamp, content: $0.content, isPinned: $0.isPinned,
+                  snippetTitle: $0.snippetTitle)
         }
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        return try encoder.encode(TextHistoryExport(formatVersion: 1, clips: entries))
+        return try encoder.encode(TextHistoryExport(formatVersion: items.contains(where: \.isSnippet) ? 2 : 1, clips: entries))
     }
 }

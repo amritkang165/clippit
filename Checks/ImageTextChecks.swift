@@ -1,5 +1,6 @@
 // Purpose: Exercise real on-device Vision OCR with generated images and isolated files.
 import AppKit
+import Vision
 
 @MainActor func checkImageTextRecognition() async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -25,11 +26,19 @@ import AppKit
         return url
     }
 
+    print("OCR environment: \(ProcessInfo.processInfo.operatingSystemVersionString), Vision default revision \(VNRecognizeTextRequest.defaultRevision), supported \(VNRecognizeTextRequest.supportedRevisions)")
+    #if arch(arm64)
+    print("OCR hardware architecture: arm64")
+    #else
+    print("OCR hardware architecture: x86_64")
+    #endif
     let recognizer = ImageTextRecognizer()
     let image = try fixture("text.png", text: "Clippit 12345")
     let original = try Data(contentsOf: image)
     let result = try await recognizer.recognize(at: image)
     precondition(result.contains("Clippit") && result.contains("12345"), "Unexpected OCR: \(result)")
+    let cpuResult = try await recognizer.recognize(at: image, cpuOnly: true)
+    precondition(cpuResult.contains("Clippit") && cpuResult.contains("12345"), "CPU OCR did not recognize the generated fixture")
     let unchanged = try Data(contentsOf: image)
     precondition(unchanged == original)
 

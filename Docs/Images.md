@@ -34,3 +34,11 @@ indexed by search, or included in text-history exports. Copy Text uses the
 normal restoration path, so it does not create another history entry. The
 saved image stays unchanged. Images are downsampled to at most 4096 pixels on
 the longest edge for recognition, which can affect tiny text in large images.
+### Recognition recovery
+
+Recognition uses a fresh Vision request for each attempt: the default revision
+with automatic device selection, the same revision with CPU devices, then the
+newest older supported revision on CPU. Cancellation prevents retries or results
+from being applied. If every attempt fails, the image remains intact and a
+recoverable message offers another try. Diagnostic logs contain only the attempt
+phase, Vision revision and numeric error code, not image paths or recognized text.

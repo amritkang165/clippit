@@ -5,8 +5,12 @@ import UniformTypeIdentifiers
 struct HistoryView: View {
     @ObservedObject var store: ClipStore
     @ObservedObject var presentation: HistoryPresentation
-    let onCopy: (ClipItem) -> Void
-    let onCopyAndPaste: (ClipItem) -> Void
+    @ObservedObject var settings: SettingsStore
+    let onCopy: (ClipItem) -> Bool
+    let onCopyAndPaste: (ClipItem) -> Bool
+    @StateObject private var copyFeedback = CopyFeedback()
+    @State private var snippetDraft: SnippetDraft?
+    @State private var snippetToDelete: ClipItem?
     @State private var isSearchPresented = false
     @State private var searchText = ""
     @State private var selection: UUID?
@@ -46,6 +50,11 @@ struct HistoryView: View {
             .navigationTitle("Clippit")
             .toolbar {
                 ToolbarItem {
+                    Button { snippetDraft = SnippetDraft() } label: {
+                        Label("New snippet", systemImage: "text.badge.plus")
+                    }
+                }
+                ToolbarItem {
                     Button { exportText() } label: {
                         Label("Export visible text…", systemImage: "square.and.arrow.up")
                     }
@@ -67,8 +76,8 @@ struct HistoryView: View {
                 HistoryKeyboardShortcuts { action in
                     guard let item = selectedItem else { return false }
                     switch action {
-                    case .copy: onCopy(item)
-                    case .copyAndPaste: onCopyAndPaste(item)
+                    case .copy: copy(item)
+                    case .copyAndPaste: copy(item, andPaste: true)
                     case .delete: delete(item)
                     }
                     return true
@@ -93,6 +102,24 @@ struct HistoryView: View {
                 Button("OK") { errorMessage = nil }
             } message: { Text(errorMessage ?? "") }
         }
+        .sheet(item: $snippetDraft) { draft in
+            SnippetEditor(draft: draft) { title, text in
+                let id = try store.saveSnippet(title: title, text: text, editing: draft.existingID)
+                filter = .snippets
+                searchText = ""
+                refreshResults()
+                selection = id
+            }
+        }
+        .confirmationDialog("Delete this snippet permanently?", isPresented: Binding(
+            get: { snippetToDelete != nil }, set: { if !$0 { snippetToDelete = nil } }
+        ), titleVisibility: .visible) {
+            Button("Delete snippet", role: .destructive) {
+                if let item = snippetToDelete { deleteConfirmed(item) }
+                snippetToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { snippetToDelete = nil }
+        }
         .tint(VaultStyle.accent)
         .frame(minWidth: 760, minHeight: 520)
     }
@@ -102,13 +129,23 @@ struct HistoryView: View {
             clipList.frame(width: max(290, width * 0.42))
             Rectangle().fill(VaultStyle.line).frame(width: 1)
             if let item = selectedItem {
-                ClipDetailView(item: item, onCopy: { onCopy(item) },
-                               onPaste: { onCopyAndPaste(item) },
-                               onPin: { togglePin(item) }, onDelete: { delete(item) },
-                               onCopyText: { text in
-                                   onCopy(ClipItem(id: UUID(), timestamp: Date(), content: text, isPinned: false))
-                               })
-                    .id(item.id)
+                VStack(spacing: 0) {
+                    if item.imagePath == nil {
+                        HStack {
+                            Spacer()
+                            Button(item.isSnippet ? "Edit snippet…" : "Save as snippet…") {
+                                snippetDraft = SnippetDraft(item: item)
+                            }
+                        }.padding(.horizontal, 24).padding(.top, 12)
+                    }
+                    ClipDetailView(item: item, onCopy: { copy(item) },
+                                   onPaste: { copy(item, andPaste: true) },
+                                   onPin: { togglePin(item) }, onDelete: { delete(item) },
+                                   onCopyText: { text in
+                                       copy(ClipItem(id: UUID(), timestamp: Date(), content: text, isPinned: false))
+                                   })
+                        .id(item.id)
+                }
             } else {
                 VStack(spacing: 12) {
                     Image(systemName: "doc.text.magnifyingglass")
@@ -149,7 +186,7 @@ struct HistoryView: View {
             .padding(14).frame(maxWidth: .infinity, alignment: .leading)
             .background(VaultStyle.surface.opacity(0.7), in: RoundedRectangle(cornerRadius: 12))
             HStack(spacing: 6) {
-                ShortcutBadge(text: "⌘⇧V")
+                ShortcutBadge(text: settings.historyShortcut.display)
                 Text("Quick access").font(.system(size: 10)).foregroundStyle(.secondary)
             }
         }
@@ -219,18 +256,25 @@ struct HistoryView: View {
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                         .contextMenu {
-                            Button("Copy") { onCopy(item) }
-                            Button("Copy and Paste") { onCopyAndPaste(item) }
+                            Button("Copy") { copy(item) }
+                            Button("Copy and Paste") { copy(item, andPaste: true) }
                             if item.imagePath == nil {
                                 Menu("Copy as") {
                                     ForEach(TextTransform.allCases) { transform in
                                         Button(transform.rawValue) {
-                                            if let copy = item.transformed(transform) { onCopy(copy) }
+                                            if let transformed = item.transformed(transform) { copy(transformed) }
                                         }
                                     }
                                 }
                             }
-                            Button(item.isPinned ? "Unpin" : "Pin") { togglePin(item) }
+                            if item.isSnippet {
+                                Button("Edit snippet…") { snippetDraft = SnippetDraft(item: item) }
+                            } else {
+                                Button(item.isPinned ? "Unpin" : "Pin") { togglePin(item) }
+                                if item.imagePath == nil {
+                                    Button("Save as snippet…") { snippetDraft = SnippetDraft(item: item) }
+                                }
+                            }
                             Divider()
                             Button("Delete", role: .destructive) { delete(item) }
                         }
@@ -240,7 +284,7 @@ struct HistoryView: View {
             .scrollContentBackground(.hidden)
             .onKeyPress(.return) {
                 guard let item = selectedItem else { return .ignored }
-                onCopy(item)
+                copy(item)
                 return .handled
             }
             .overlay {
@@ -269,7 +313,7 @@ struct HistoryView: View {
                     .font(.system(size: 13)).foregroundStyle(.secondary)
             }
             HStack(spacing: 7) {
-                ShortcutBadge(text: "⌘⇧V")
+                ShortcutBadge(text: settings.historyShortcut.display)
                 Text("Bring your clipboard back, from anywhere.")
                     .font(.system(size: 11)).foregroundStyle(.secondary)
             }
@@ -283,6 +327,11 @@ struct HistoryView: View {
         VStack(spacing: 0) {
             Rectangle().fill(VaultStyle.line).frame(height: 1)
             HStack(spacing: 7) {
+                if copyFeedback.isVisible {
+                    Label("Copied", systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(VaultStyle.accent)
+                        .accessibilityLabel("Copied to clipboard")
+                }
                 Circle().fill(VaultStyle.accent).frame(width: 5, height: 5)
                 TimelineView(.periodic(from: .now, by: 60)) { context in
                     let count = store.countToday(now: context.date)
@@ -300,11 +349,15 @@ struct HistoryView: View {
         }
     }
 
+    private func copy(_ item: ClipItem, andPaste: Bool = false) {
+        copyFeedback.copy { andPaste ? onCopyAndPaste(item) : onCopy(item) }
+    }
+
     private func exportText() {
         let snapshot = visibleItems
         let panel = NSSavePanel()
         panel.title = "Export visible text clips"
-        panel.message = "Includes text from the current search and filter. Images are excluded. The exported file is not encrypted."
+        panel.message = "Includes text from the current search and filter. Visible snippets include their names and contents. Images are excluded. The exported file is not encrypted."
         panel.allowedContentTypes = [.json]
         panel.nameFieldStringValue = "Clippit-text.json"
         guard panel.runModal() == .OK, let url = panel.url else { return }
@@ -318,6 +371,7 @@ struct HistoryView: View {
         case .text: return store.items.filter { $0.imagePath == nil }.count
         case .images: return store.items.filter { $0.imagePath != nil }.count
         case .pinned: return store.items.filter(\.isPinned).count
+        case .snippets: return store.items.filter(\.isSnippet).count
         }
     }
 
@@ -335,6 +389,11 @@ struct HistoryView: View {
     }
 
     private func delete(_ item: ClipItem) {
+        if item.isSnippet { snippetToDelete = item; return }
+        deleteConfirmed(item)
+    }
+
+    private func deleteConfirmed(_ item: ClipItem) {
         do { try store.delete(item.id); refreshResults() }
         catch { errorMessage = error.localizedDescription }
     }

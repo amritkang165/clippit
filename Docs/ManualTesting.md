@@ -63,3 +63,20 @@ These are manual acceptance steps, not a claim they have all been executed.
   in both light and dark appearances. Select and copy a portion of the result.
 - Verify recognition with networking disabled. Results are temporary and do not
   become search results or text exports unless separately saved as text.
+## Updated features
+
+- In Settings, record a different history shortcut, close history, trigger it,
+  minimize history and trigger it again. Search should be selected each time.
+  Restart the app and check persistence; reset to Command-Shift-V. Try a known
+  conflicting shortcut and confirm a detected registration error retains the old one.
+- Copy a text clip, use Copy as, and use OCR Copy Text. Each successful write
+  should show Copied without moving keyboard focus. Check VoiceOver announcement,
+  light/dark appearances and Reduce Motion. Copy & Paste must never claim paste
+  succeeded just because copying worked.
+- Create and edit a Unicode snippet, search its title and body, copy it and
+  confirm no new history entry appears. Restart and verify persistence. Lower
+  the history limit and clear history; snippets must survive. Export the Snippets
+  filter and check titles and content, then explicitly delete a disposable snippet.
+- Run `python3 Checks/run.py --suite ocr`; failures remain failures. If a platform
+  cannot run OCR, retain the phase/revision/error-code logs and OS/architecture
+  printed by the check. Do not mark recognition successful or skip this check.

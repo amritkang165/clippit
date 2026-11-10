@@ -6,6 +6,7 @@ enum ClipFilter: String, CaseIterable, Identifiable {
     case text = "Text only"
     case images = "Images"
     case pinned = "Pinned"
+    case snippets = "Snippets"
 
     var id: Self { self }
 }
@@ -26,6 +27,7 @@ extension ClipFilter {
         case .text: return "text.alignleft"
         case .images: return "photo"
         case .pinned: return "pin"
+        case .snippets: return "text.badge.plus"
         }
     }
 }

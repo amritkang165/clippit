@@ -17,16 +17,18 @@ struct ClipDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("SELECTED CLIP").font(.system(size: 10, weight: .semibold)).tracking(1.3)
+                Text(item.isSnippet ? "SNIPPET" : "SELECTED CLIP").font(.system(size: 10, weight: .semibold)).tracking(1.3)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button(action: onPin) {
-                    Label(item.isPinned ? "Pinned" : "Pin clip", systemImage: item.isPinned ? "pin.fill" : "pin")
-                        .font(.system(size: 11, weight: .medium))
+                if !item.isSnippet {
+                    Button(action: onPin) {
+                        Label(item.isPinned ? "Pinned" : "Pin clip", systemImage: item.isPinned ? "pin.fill" : "pin")
+                            .font(.system(size: 11, weight: .medium))
+                    }
+                    .buttonStyle(.borderless)
+                    .tint(VaultStyle.accent)
+                    .help(item.isPinned ? "Unpin clip" : "Pin clip")
                 }
-                .buttonStyle(.borderless)
-                .tint(VaultStyle.accent)
-                .help(item.isPinned ? "Unpin clip" : "Pin clip")
             }
 
             HStack(spacing: 12) {
@@ -36,7 +38,7 @@ struct ClipDetailView: View {
                     .frame(width: 44, height: 44)
                     .background(item.kind.tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(item.kind == .image ? "Image clip" : item.kind == .link ? "Saved link" : "Text clip")
+                    Text(item.snippetTitle ?? (item.kind == .image ? "Image clip" : item.kind == .link ? "Saved link" : "Text clip"))
                         .font(.system(size: 21, weight: .semibold, design: .rounded))
                     Text(item.timestamp.formatted(date: .abbreviated, time: .shortened))
                         .font(.system(size: 11)).foregroundStyle(.secondary)

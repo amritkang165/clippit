@@ -4,8 +4,10 @@ import AppKit
 
 @main struct StorageCheck {
     @MainActor static func main() async throws {
-        try runSynchronousChecks()
-        try await checkImageTextRecognition()
+        let suite = CommandLine.arguments.dropFirst().first ?? "all"
+        guard ["all", "core", "ocr"].contains(suite) else { fatalError("Unknown check suite") }
+        if suite != "ocr" { try runSynchronousChecks() }
+        if suite != "core" { try await checkImageTextRecognition() }
     }
 
     @MainActor static func runSynchronousChecks() throws {
@@ -90,6 +92,7 @@ import AppKit
         try checkSearchFocus(in: directory)
         try checkMenuAndClear(in: directory)
         try checkPolish(in: directory)
+        try checkRequestedFeatures(in: directory)
         print("PASS: persistent pins, pin-safe pruning, unpinning, relative times")
         print("PASS: timer capture, non-text skip, confidential marker skip, restoration without recapture")
         print("PASS: settings defaults, persistence, clamping, and pruning")

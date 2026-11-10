@@ -1,6 +1,13 @@
 <!-- Purpose: Clarify pin protection, pruning, and deliberate deletion. -->
 # Retention and pins
 
+Named snippets are kept separately from history retention, even though they
+appear in the same library. They do not consume the history limit and neither
+Clear all history nor Clear unpinned history deletes them. Delete a snippet
+explicitly from the Snippets filter, where deletion asks for confirmation.
+Export visible text includes visible snippets with their titles and contents;
+exporting does not delete them. No import or automatic expansion is provided.
+
 The default history limit is 500 entries. Pins count toward this limit but are
 protected from automatic pruning. Older unpinned clips are removed first.
 

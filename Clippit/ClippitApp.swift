@@ -2,7 +2,6 @@
 
 import AppKit
 import SwiftUI
-import HotKey
 
 @main
 @MainActor
@@ -36,7 +35,7 @@ struct ClippitApp: App {
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
-    private var historyHotKey: HotKey?
+    private var historyHotKey: HistoryShortcutController?
     private let presentation = HistoryPresentation()
     private let pasteController = PasteController()
     private var historyWindow: NSWindow?
@@ -76,10 +75,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 }
             }
             clipboardMonitor.start()
-            historyHotKey = HotKey(key: .v, modifiers: [.command, .shift])
-            historyHotKey?.keyDownHandler = { [weak self] in
-                Task { @MainActor [weak self] in self?.openHistory() }
-            }
+            let controller = HistoryShortcutController { [weak self] in self?.openHistory() }
+            historyHotKey = controller
+            settings.onShortcutChange = { [weak controller] in try controller?.replace(with: $0) }
+            do { try controller.replace(with: settings.historyShortcut) }
+            catch { settings.shortcutError = error.localizedDescription }
         } catch {
             showError(error)
         }
@@ -89,10 +89,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         guard let store else { return }
         pasteController.rememberFrontmostApplication()
         if historyWindow == nil {
-            let view = HistoryView(store: store, presentation: presentation, onCopy: { [weak self] item in
-                self?.copy(item, andPaste: false)
+            let view = HistoryView(store: store, presentation: presentation, settings: settings, onCopy: { [weak self] item in
+                self?.copy(item, andPaste: false) ?? false
             }, onCopyAndPaste: { [weak self] item in
-                self?.copy(item, andPaste: true)
+                self?.copy(item, andPaste: true) ?? false
             })
             let window = NSWindow(
                 contentRect: NSRect(x: 0, y: 0, width: 1040, height: 700),
@@ -106,10 +106,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             window.center()
             historyWindow = window
         }
-        NSApplication.shared.activate(ignoringOtherApps: true)
-        if historyWindow?.isMiniaturized == true { historyWindow?.deminiaturize(nil) }
-        historyWindow?.makeKeyAndOrderFront(nil)
-        presentation.requestSearchFocus()
+        if let historyWindow { presentation.show(historyWindow) }
     }
 
     func openSettings() {
@@ -131,19 +128,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         false
     }
 
-    func copy(_ item: ClipItem, andPaste: Bool) {
+    @discardableResult
+    func copy(_ item: ClipItem, andPaste: Bool) -> Bool {
         do {
             guard try clipboardMonitor.copyToClipboard(item) else {
                 throw CocoaError(.fileWriteUnknown)
             }
-            if andPaste { try pasteController.paste(expectedChangeCount: NSPasteboard.general.changeCount) }
         } catch {
             showError(error)
+            return false
         }
+        if andPaste {
+            do { try pasteController.paste(expectedChangeCount: NSPasteboard.general.changeCount) }
+            catch { showError(error) }
+        }
+        return true // Confirms only the completed pasteboard write.
     }
 
     func confirmClearAll(keepingPins: Bool = false) {
-        guard let store, !store.items.isEmpty, !isConfirmingClear else { return }
+        guard let store, store.items.contains(where: { !$0.isSnippet }), !isConfirmingClear else { return }
         isConfirmingClear = true
         // Let the menu finish closing before presenting a native confirmation dialog.
         DispatchQueue.main.async { [weak self] in
@@ -154,8 +157,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             alert.alertStyle = .warning
             alert.messageText = keepingPins ? "Clear unpinned history?" : "Clear all clipboard history?"
             alert.informativeText = keepingPins
-                ? "This permanently deletes unpinned clips and their images. Pinned clips and your current clipboard stay unchanged."
-                : "This permanently deletes all saved clips, including pinned clips and saved images. Your current clipboard stays unchanged."
+                ? "This permanently deletes unpinned history and its images. Pinned clips, snippets and your current clipboard stay unchanged."
+                : "This permanently deletes clipboard history, including pinned clips and saved images. Snippets and your current clipboard stay unchanged."
             alert.addButton(withTitle: "Cancel")
             let clearButton = alert.addButton(withTitle: keepingPins ? "Clear Unpinned" : "Clear All")
             clearButton.hasDestructiveAction = true

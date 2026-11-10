@@ -13,6 +13,7 @@ final class ClipStore: ObservableObject {
     private let content = SQLite.Expression<String>("content")
     private let pinned = SQLite.Expression<Int>("pinned")
     private let imagePath = SQLite.Expression<String?>("imagePath")
+    private let snippetTitle = SQLite.Expression<String?>("snippetTitle")
     private let imageDirectory: URL
     var maxItems = 500
     private var lastSavedContent: String?
@@ -44,8 +45,10 @@ final class ClipStore: ObservableObject {
         if !columns.contains("imagePath") {
             try db.run(clips.addColumn(imagePath))
         }
+        if !columns.contains("snippetTitle") {
+            try db.run(clips.addColumn(snippetTitle))
+        }
         try reload()
-        lastSavedContent = items.first?.imagePath == nil ? items.first?.content : nil
         cleanupOrphanImages()
     }
 
@@ -60,10 +63,10 @@ final class ClipStore: ObservableObject {
             ))
             try prune()
         }
-        lastSavedContent = text
         try reload()
         cleanupOrphanImages()
-        return true
+        // True means the new entry survived retention, not merely that INSERT ran.
+        return items.contains { $0.id == item.id }
     }
 
     func saveImage(_ data: Data) throws {
@@ -83,7 +86,6 @@ final class ClipStore: ObservableObject {
             try? FileManager.default.removeItem(at: file)
             throw error
         }
-        lastSavedContent = nil
         try reload()
         cleanupOrphanImages()
     }
@@ -103,13 +105,15 @@ final class ClipStore: ObservableObject {
             let escaped = text.replacingOccurrences(of: "\\", with: "\\\\")
                 .replacingOccurrences(of: "%", with: "\\%")
                 .replacingOccurrences(of: "_", with: "\\_")
-            query = query.filter(content.like("%" + escaped + "%", escape: "\\"))
+            let pattern = "%" + escaped + "%"
+            query = query.filter(content.like(pattern, escape: "\\") || snippetTitle.like(pattern, escape: "\\"))
         }
         switch filter {
         case .all: break
         case .text: query = query.filter(imagePath == nil)
         case .images: query = query.filter(imagePath != nil)
         case .pinned: query = query.filter(pinned != 0)
+        case .snippets: query = query.filter(snippetTitle != nil)
         }
         switch sort {
         case .newest: return try read(query.order(ts.desc, rowid.desc))
@@ -119,17 +123,15 @@ final class ClipStore: ObservableObject {
     }
 
     func clearUnpinned() throws {
-        try db.transaction { try db.run(clips.filter(pinned == 0).delete()) }
+        try db.transaction { try db.run(clips.filter(pinned == 0 && snippetTitle == nil).delete()) }
         try reload()
-        lastSavedContent = items.first?.imagePath == nil ? items.first?.content : nil
         try removeOrphanImages()
     }
 
     func clearAll() throws {
         try db.transaction {
-            try db.run(clips.delete())
+            try db.run(clips.filter(snippetTitle == nil).delete())
         }
-        lastSavedContent = nil
         try reload()
         // Surface cleanup failures for an explicit clear instead of silently leaving files.
         try removeOrphanImages()
@@ -138,13 +140,12 @@ final class ClipStore: ObservableObject {
     func delete(_ itemID: UUID) throws {
         try db.run(clips.filter(id == itemID.uuidString).delete())
         try reload()
-        lastSavedContent = items.first?.imagePath == nil ? items.first?.content : nil
         cleanupOrphanImages()
     }
 
     func setPinned(_ itemID: UUID, to value: Bool) throws {
         try db.transaction {
-            try db.run(clips.filter(id == itemID.uuidString).update(pinned <- (value ? 1 : 0)))
+            try db.run(clips.filter(id == itemID.uuidString && snippetTitle == nil).update(pinned <- (value ? 1 : 0)))
             try prune()
         }
         try reload()
@@ -160,11 +161,11 @@ final class ClipStore: ObservableObject {
 
     private func prune() throws {
         // Pinned entries survive pruning, even if pins alone exceed the limit.
-        let pinnedCount = try db.scalar(clips.filter(pinned != 0).count)
+        let pinnedCount = try db.scalar(clips.filter(pinned != 0 && snippetTitle == nil).count)
         let unpinnedLimit = max(0, maxItems - pinnedCount)
         try db.run("""
             DELETE FROM clips WHERE id IN (
-                SELECT id FROM clips WHERE pinned = 0
+                SELECT id FROM clips WHERE pinned = 0 AND snippetTitle IS NULL
                 ORDER BY ts DESC, rowid DESC LIMIT -1 OFFSET ?
             )
             """, unpinnedLimit)
@@ -190,6 +191,8 @@ final class ClipStore: ObservableObject {
 
     private func reload() throws {
         items = try read(clips.order(ts.desc, rowid.desc))
+        let latest = items.first { !$0.isSnippet }
+        lastSavedContent = latest?.imagePath == nil ? latest?.content : nil
     }
 
     private func read(_ query: Table) throws -> [ClipItem] {
@@ -198,7 +201,37 @@ final class ClipStore: ObservableObject {
                 throw CocoaError(.fileReadCorruptFile)
             }
             return ClipItem(id: uuid, timestamp: Date(timeIntervalSince1970: row[ts]),
-                            content: row[content], isPinned: row[pinned] != 0, imagePath: row[imagePath])
+                            content: row[content], isPinned: row[pinned] != 0, imagePath: row[imagePath],
+                            snippetTitle: row[snippetTitle])
+        }
+    }
+
+    @discardableResult
+    func saveSnippet(title: String, text: String, editing itemID: UUID? = nil) throws -> UUID {
+        let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !title.isEmpty, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw SnippetError.empty
+        }
+        let uuid = itemID ?? UUID()
+        if itemID != nil {
+            let changed = try db.run(clips.filter(id == uuid.uuidString && snippetTitle != nil).update(
+                snippetTitle <- title, content <- text))
+            guard changed == 1 else { throw SnippetError.missing }
+        } else {
+            try db.run(clips.insert(id <- uuid.uuidString, ts <- Date().timeIntervalSince1970,
+                                   content <- text, pinned <- 0, snippetTitle <- title))
+        }
+        try reload()
+        return uuid
+    }
+
+    enum SnippetError: LocalizedError {
+        case empty, missing
+        var errorDescription: String? {
+            switch self {
+            case .empty: return "Enter a name and some text for the snippet."
+            case .missing: return "This snippet was deleted. Create a new snippet to keep your changes."
+            }
         }
     }
 }

@@ -30,12 +30,16 @@ func checkSearchFocus(in directory: URL) throws {
         precondition(field.currentEditor()?.selectedRange == NSRange(location: 0, length: (query as NSString).length))
     }
     let store = try ClipStore(databaseURL: directory.appendingPathComponent("focus/clips.sqlite3"))
+    let suite = "ClippitFocus.\(UUID())"
+    let defaults = UserDefaults(suiteName: suite)!
+    defer { defaults.removePersistentDomain(forName: suite) }
+    let settings = SettingsStore(defaults: defaults)
     let hosted = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 960, height: 680),
                           styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
     hosted.isReleasedWhenClosed = false
     defer { hosted.close() }
-    hosted.contentView = NSHostingView(rootView: HistoryView(store: store, presentation: presentation,
-                                                            onCopy: { _ in }, onCopyAndPaste: { _ in }))
+    hosted.contentView = NSHostingView(rootView: HistoryView(store: store, presentation: presentation, settings: settings,
+                                                            onCopy: { _ in true }, onCopyAndPaste: { _ in true }))
     hosted.contentView?.layoutSubtreeIfNeeded()
     RunLoop.main.run(until: Date().addingTimeInterval(0.3))
     let toolbarField = hosted.toolbar?.items.compactMap { $0 as? NSSearchToolbarItem }.first?.searchField

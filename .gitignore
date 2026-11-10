@@ -3,6 +3,9 @@
 .build/
 .swiftpm/
 DerivedData/
+check-logs/
+__pycache__/
+Clippit.xcodeproj/project.xcworkspace/
 xcuserdata/
 *.xcuserstate
 Steps/

@@ -42,6 +42,7 @@ extension ClipItem {
     }
 
     var rowPreview: String {
+        if let snippetTitle { return snippetTitle }
         if imagePath != nil { return "Copied image" }
         let value = String(content.prefix(80)).components(separatedBy: .whitespacesAndNewlines)
             .filter { !$0.isEmpty }.joined(separator: " ")

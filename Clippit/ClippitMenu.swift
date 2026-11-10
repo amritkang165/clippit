@@ -27,13 +27,13 @@ struct ClippitMenu: View {
         }
 
         if !store.recentItems.isEmpty { Divider() }
-        Button("Open Clippit", action: onOpenHistory)
+        Button("Open Clippit (\(settings.historyShortcut.display))", action: onOpenHistory)
         Button("Settings…", action: onSettings)
             .keyboardShortcut(",", modifiers: .command)
-        Button("Clear unpinned…", action: onClearUnpinned)
-            .disabled(!store.items.contains { !$0.isPinned })
-        Button("Clear all…", action: onClearAll)
-            .disabled(store.items.isEmpty)
+        Button("Clear unpinned history…", action: onClearUnpinned)
+            .disabled(!store.items.contains { !$0.isPinned && !$0.isSnippet })
+        Button("Clear all history…", action: onClearAll)
+            .disabled(!store.items.contains { !$0.isSnippet })
         Divider()
         Button("Quit") { NSApplication.shared.terminate(nil) }
     }

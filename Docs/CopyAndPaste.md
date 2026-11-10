@@ -15,3 +15,9 @@ regular app and attempts to send it Command-V after activation and key release.
 Copying and pasting are separate actions: the clip may already be on the
 clipboard even when simulated paste fails. Copy alone remains available.
 An app receiving Command-V still decides whether its focused field can paste.
+
+History shows a brief Copied confirmation only after a successful clipboard
+write, including Copy as and OCR Copy Text. VoiceOver receives an announcement.
+The confirmation does not move focus or use animation, and repeated copies
+restart its duration. It confirms copying only, never delivery to another app.
+Failed copies clear any previous success confirmation and report their error.
